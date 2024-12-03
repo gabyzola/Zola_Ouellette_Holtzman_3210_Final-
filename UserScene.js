@@ -37,25 +37,15 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
 });
 
-// add a listerner for a key press
-window.addEventListener('keypress', (event) => {
-    if (event.key === 'a') {
-        user.bodySetMaterial(new THREE.Color("blue"));
-    }
-});
-
 const colorPickerBody = document.getElementById("colorPickerBody");
+const colorPickerHead = document.getElementById("colorPickerHead");
 
 colorPickerBody.addEventListener("change", function() {
     const selectedColor = this.value;
     user.bodySetMaterial(selectedColor);
-    console.log("Selected Color Body:", selectedColor); 
 });
-
-const colorPickerHead = document.getElementById("colorPickerHead");
 
 colorPickerHead.addEventListener("change", function() {
     const selectedColor = this.value;
     user.headSetMaterial(selectedColor);
-    console.log("Selected Color Head:", selectedColor); 
 });

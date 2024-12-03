@@ -4,37 +4,53 @@ body {
 
 #container {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#colorPickerBody {
+#colorPickerBodyLI {
     position: absolute;
-    top: 0;
-    left: 0;
+    bottom: 20%;
+    right: 10%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
 }
-#colorPickerHead {
+#textureAdderLI {
     position: absolute;
-    top: 0;
-    left: 1;
+    top: 5%;
+    left: 5%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
 }
+
+#colorPickerHeadLI {
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
+}
+
+label {
+    margin: 0 10px;
+    color: white;
+}
+
+input[type="file"] {
+    color: white;
+}
+
 #myCanvas {
     position: absolute;
     top: 0;
     left: 0;
-}
-
-#colorPickerBody {
-    z-index: 1;
-    display: inline-block;
-    list-style: none;
-}
-#colorPickerHead {
-    z-index: 1;
-    display: inline-block;
-    list-style: none;
-
 }
