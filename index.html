@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script type="module" src="/Main.js"></script>
+    <div id="container">
+        <ul>
+            <li>
+                <label for="colorPickerBody">Color for Body</label>
+                <input type="color" id="colorPickerBody" value="#ff0000">
+            </li>
+            <li>
+                <label for="colorPickerBody">Color for Head</label>
+                <input type="color" id="colorPickerHead" value="#ff0000">
+            </li>
+        </ul>
+    </div>
+    <canvas id="myCanvas"></canvas>
+    <script type="module" src="/UserScene.js"></script>
 </body>
 </html>
