@@ -4,9 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/public/styles/style.css">
 </head>
 <body>
-    <script type="module" src="/Main.js"></script>
+    <div id="container">
+        <ul>
+            <li id="colorPickerBodyLI">
+                <label for="colorPickerBody">Color for Body</label>
+                <input type="color" id="colorPickerBody" value="#ff0000">
+            </li>
+            <li id="colorPickerHeadLI">
+                <label for="colorPickerBody">Color for Head</label>
+                <input type="color" id="colorPickerHead" value="#ff0000">
+            </li>
+            <li id="texturePickerHeadLI">
+                <label for="texturePickerHead">Texture for Head</label>
+                <select name="texturePickerHead" id="texturePickerHead">
+                    <option value="none">none</option>
+                </select>
+            </li>
+            <li id="texturePickerBodyLI">
+                <label for="texturePickerBody">Texture for Body</label>
+                <select name="texturePickerBody" id="texturePickerBody">
+                    <option value="none">none</option>
+                </select> 
+            </li>
+        </ul>
+    </div>
+    <canvas id="myCanvas"></canvas>
+    <script type="module" src="/public/js/Main.js"></script>
 </body>
 </html>
