@@ -47,23 +47,25 @@ export default class User extends THREE.Group {
         this.bodyMesh.material = material;
     }   
 
+    /**
+     * This function sets the material of the head of the character
+     * 
+     * @param {STRING} color of choice
+     */
     headSetMaterial(color) {
         this.headMesh.material.color.set(color);
     }
 
+    /**
+     * This function sets the texture of the head of the character
+     * 
+     * @param {STRING} path to to the texture of choice
+     */
     headSetTexture(path) {
         var texture = new THREE.TextureLoader().load(path);
         var material = new THREE.MeshBasicMaterial({ map: texture });
         this.headMesh.material = material
             
-    }
-
-    setAbility() {
-
-    }
-
-    useAbility() {
-
     }
 
 }

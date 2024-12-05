@@ -3,6 +3,11 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import User from './User.js';
 
 export default class UserScene extends THREE.Scene{
+    /**
+     * This is the scene for the user selections and being able to access the user afters
+     * 
+     * @param {THREE.WebGLRenderer} renderer is the renderer that will be used to render the scene
+     */
     constructor(renderer) {
         super();
 
@@ -10,8 +15,6 @@ export default class UserScene extends THREE.Scene{
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.z = 8;
         this.camera.position.y = 2;
-
-        
 
         this.controls = new OrbitControls(this.camera, renderer.domElement);
         this.controls.enablePan = false;
