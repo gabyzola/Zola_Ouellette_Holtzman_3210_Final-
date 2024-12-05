@@ -13,7 +13,7 @@ export default class UserScene extends THREE.Scene{
 
         // Create a camera, which determines what we'll see when we render the scene
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.z = 8;
+        this.camera.position.z = 6;
         this.camera.position.y = 2;
 
         this.controls = new OrbitControls(this.camera, renderer.domElement);
@@ -35,7 +35,7 @@ export default class UserScene extends THREE.Scene{
         light.shadow.camera.right = 10;
         this.add(light);
 
-        var a = new THREE.AmbientLight(0x707070, 1);
+        var a = new THREE.AmbientLight(0x909090, 1);
         this.add(a);
 
         this.user = new User();

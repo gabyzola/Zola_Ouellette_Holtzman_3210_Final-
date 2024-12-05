@@ -12,11 +12,11 @@ body {
 }
 
 #colorPickerBodyLI {
-    width: 200px;
+    width: 300px;
     height: 50px;
     position: absolute;
     bottom: 20%;
-    right: 10%;
+    right: 0%;
     transform: translateX(-10%);
     z-index: 1;
     display: inline-block;
@@ -24,11 +24,11 @@ body {
 }
 
 #colorPickerHeadLI {
-    width: 200px;
+    width: 300px;
     height: 50px;
     position: absolute;
     top: 20%;
-    right: 10%;
+    right: 0%;
     transform: translateX(-10%);
     z-index: 1;
     display: inline-block;
@@ -36,11 +36,11 @@ body {
 }
 
 #texturePickerBodyLI {
-    width: 200px;
+    width: 300px;
     height: 50px;
     position: absolute;
-    top: 30%;
-    right: 10%;
+    bottom: 30%;
+    right: 0%;
     transform: translateX(-10%);
     z-index: 1;
     display: inline-block;
@@ -48,11 +48,59 @@ body {
 }
 
 #texturePickerHeadLI {
-    width: 200px;
+    width: 300px;
     height: 50px;
     position: absolute;
-    bottom: 30%;
-    right: 10%;
+    top: 30%;
+    right: 0%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
+}
+
+#shinySliderHeadLI {
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    top: 40%;
+    right: 0%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
+}
+
+#shinySliderBodyLI {
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    bottom: 40%;
+    right: 0%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
+}
+
+#emissiveButtonBodyLI {
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    bottom: 10%;
+    right: 0%;
+    transform: translateX(-10%);
+    z-index: 1;
+    display: inline-block;
+    list-style: none;
+}
+
+#emissiveButtonHeadLI {
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    top: 10%;
+    right: 0%;
     transform: translateX(-10%);
     z-index: 1;
     display: inline-block;

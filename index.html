@@ -21,15 +21,44 @@
                 <label for="texturePickerHead">Texture for Head</label>
                 <select name="texturePickerHead" id="texturePickerHead">
                     <option value="none">none</option>
+                    <option value="gold">Gold</option>
+                    <option value="fabric">Fabric</option>
+                    <option value="metal">Metal</option>
+                    <option value="plastic">Plastic</option>
+                    <option value="wood">Wood</option>
                 </select>
             </li>
             <li id="texturePickerBodyLI">
                 <label for="texturePickerBody">Texture for Body</label>
                 <select name="texturePickerBody" id="texturePickerBody">
                     <option value="none">none</option>
+                    <option value="gold">Gold</option>
+                    <option value="fabric">Fabric</option>
+                    <option value="metal">Metal</option>
+                    <option value="plastic">Plastic</option>
+                    <option value="wood">Wood</option>
                 </select> 
             </li>
+            <li id="shinySliderHeadLI">
+                <!-- This is going to be the slider for the head to be shiny -->
+                <label for="shinySliderHead">Shiny Head Slider</label>
+                <input type="range" min="0" max="1000" value="0" class="slider" id="shinySliderHead">
+            </li>
+            <li id="shinySliderBodyLI">
+                <!-- This is going to be the slider for the body to be shiny -->
+                <label for="shinySliderBody">Shiny Body Slider</label>
+                <input type="range" min="0" max="1000" value="0" class="slider" id="shinySliderBody">
+            </li>
+            <li id="emissiveButtonHeadLI">
+                <!-- Button to make the head emissive -->
+                <button id="emessiveHead">Emessive Head</button>
+            </li>
+            <li id="emissiveButtonBodyLI">
+                <!-- Button to make the body emissive -->
+                <button id="emessiveBody">Emessive Body</button>
+            </li>
         </ul>
+        <!-- Button that will send the user into the game and save the users group/mesh to the game -->
     </div>
     <canvas id="myCanvas"></canvas>
     <script type="module" src="/public/js/Main.js"></script>

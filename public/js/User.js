@@ -11,7 +11,7 @@ export default class User extends THREE.Group {
         this.body = new THREE.CylinderGeometry(1.25, 1.5, 4, 32);
         var bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
         this.head = new THREE.SphereGeometry(1, 32, 32);
-        var headMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+        var headMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
         this.bodyMesh = new THREE.Mesh(this.body, bodyMaterial);
         this.headMesh = new THREE.Mesh(this.head, headMaterial);
 
@@ -40,10 +40,12 @@ export default class User extends THREE.Group {
      * This function sets the material of the body and head of the character
      * 
      * @param {STRING} path this is the path to the texture of choice
+     * @param {STRING} normalPath this is the path to the normal map of the texture
      */
-    bodySetTexture(path) {
+    bodySetTexture(path, normalPath) {
         var texture = new THREE.TextureLoader().load(path);
-        var material = new THREE.MeshBasicMaterial({ map: texture });
+        var normal = new THREE.TextureLoader().load(normalPath);
+        var material = new THREE.MeshPhongMaterial({ map: texture, normalMap: normal });
         this.bodyMesh.material = material;
     }   
 
@@ -60,10 +62,12 @@ export default class User extends THREE.Group {
      * This function sets the texture of the head of the character
      * 
      * @param {STRING} path to to the texture of choice
+     * @param {STRING} normalPath to the normal map of the texture
      */
-    headSetTexture(path) {
+    headSetTexture(path, normalPath) {
         var texture = new THREE.TextureLoader().load(path);
-        var material = new THREE.MeshBasicMaterial({ map: texture });
+        var normal = new THREE.TextureLoader().load(normalPath);
+        var material = new THREE.MeshPhongMaterial({ map: texture, normalMap: normal });
         this.headMesh.material = material
             
     }
