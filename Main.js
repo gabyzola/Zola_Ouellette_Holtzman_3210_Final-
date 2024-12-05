@@ -1,19 +1,36 @@
 import * as THREE from 'three';
+import UserScene from './UserScene';
 
-// Create the scene
-const scene = new THREE.Scene();
-
-// Create a camera, which determines what we'll see when we render the scene
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-// Create a renderer and attach it to our document
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
-// Create a function to animate our scene
+// Create a new UserScene
+const scene = new UserScene(renderer);
+
+// Add the scene to the document
 function animate() {
     requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+    scene.controls.update();
+    renderer.render(scene, scene.camera);
 }
 animate();
+
+// Resize the renderer when the window is resized
+window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    scene.camera.aspect = window.innerWidth / window.innerHeight;
+    scene.camera.updateProjectionMatrix();
+});
+
+const colorPickerBody = document.getElementById("colorPickerBody");
+const colorPickerHead = document.getElementById("colorPickerHead");
+
+colorPickerBody.addEventListener("change", function() {
+    const selectedColor = this.value;
+    scene.user.bodySetMaterial(selectedColor);
+});
+
+colorPickerHead.addEventListener("change", function() {
+    const selectedColor = this.value;
+    scene.user.headSetMaterial(selectedColor);
+});

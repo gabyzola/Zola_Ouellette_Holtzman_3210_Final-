@@ -9,11 +9,16 @@ export default class User extends THREE.Group {
 
         // Sets the body and head of the character
         this.body = new THREE.CylinderGeometry(1.25, 1.5, 4, 32);
-        var bodyMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        var bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
         this.head = new THREE.SphereGeometry(1, 32, 32);
-        var headMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        var headMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
         this.bodyMesh = new THREE.Mesh(this.body, bodyMaterial);
         this.headMesh = new THREE.Mesh(this.head, headMaterial);
+
+        this.bodyMesh.castShadow = true;
+        this.bodyMesh.receiveShadow = true;
+        this.headMesh.castShadow = true;
+        this.headMesh.receiveShadow = true;
 
         this.headMesh.position.y = 2;
         this.bodyMesh.position.y = -1;

@@ -20,15 +20,6 @@ body {
     display: inline-block;
     list-style: none;
 }
-#textureAdderLI {
-    position: absolute;
-    top: 5%;
-    left: 5%;
-    transform: translateX(-10%);
-    z-index: 1;
-    display: inline-block;
-    list-style: none;
-}
 
 #colorPickerHeadLI {
     position: absolute;

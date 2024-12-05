@@ -2,50 +2,43 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import User from './User.js';
 
-// Create the scene
-const scene = new THREE.Scene();
+export default class UserScene extends THREE.Scene{
+    constructor(renderer) {
+        super();
 
-// Create a camera, which determines what we'll see when we render the scene
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 5;
+        // Create a camera, which determines what we'll see when we render the scene
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.z = 8;
+        this.camera.position.y = 2;
 
-// Create a renderer and attach it to our document
-const renderer = new THREE.WebGLRenderer({canvas: myCanvas, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+        
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.update();
+        this.controls = new OrbitControls(this.camera, renderer.domElement);
+        this.controls.enablePan = false;
+        this.controls.enableZoom = false;
+        this.controls.autoRotate = true;
+        this.controls.update();
 
-var user = new User();
-scene.add(user);
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(1, 1, 1).normalize();
+        light.castShadow = true;
+        light.shadow.mapSize.width = 512;
+        light.shadow.mapSize.height = 512;
+        light.shadow.camera.near = 0.5;
+        light.shadow.camera.far = 500;
+        light.shadow.camera.top = 10;
+        light.shadow.camera.bottom = -10;
+        light.shadow.camera.left = -10;
+        light.shadow.camera.right = 10;
+        this.add(light);
 
-// Create a function to animate our scene
-function animate() {
+        var a = new THREE.AmbientLight(0x707070, 1);
+        this.add(a);
 
-    controls.update();
+        this.user = new User();
+        this.add(this.user);
 
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+    }
+    
+
 }
-animate();
-
-// Resize the renderer when the window is resized
-window.addEventListener('resize', () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-
-    camera.updateProjectionMatrix();
-});
-
-const colorPickerBody = document.getElementById("colorPickerBody");
-const colorPickerHead = document.getElementById("colorPickerHead");
-
-colorPickerBody.addEventListener("change", function() {
-    const selectedColor = this.value;
-    user.bodySetMaterial(selectedColor);
-});
-
-colorPickerHead.addEventListener("change", function() {
-    const selectedColor = this.value;
-    user.headSetMaterial(selectedColor);
-});
