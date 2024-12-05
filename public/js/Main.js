@@ -34,3 +34,10 @@ colorPickerHead.addEventListener("change", function() {
     const selectedColor = this.value;
     scene.user.headSetMaterial(selectedColor);
 });
+
+// Add a keyboard short cuts
+document.addEventListener("keydown", function(e) {
+    switch (e.key) {
+        
+    }
+});
