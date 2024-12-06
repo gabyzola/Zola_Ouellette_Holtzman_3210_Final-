@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import User from './User.js';
 
 export default class UserScene extends THREE.Scene{
     /**
@@ -37,10 +36,6 @@ export default class UserScene extends THREE.Scene{
 
         var a = new THREE.AmbientLight(0x707070, 1);
         this.add(a);
-
-        const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 ); 
-        const material = new THREE.MeshBasicMaterial( {color: 0xffff00} ); 
-        const cylinder = new THREE.Mesh( geometry, material );
-        this.add( cylinder );
+        
     }
 }
