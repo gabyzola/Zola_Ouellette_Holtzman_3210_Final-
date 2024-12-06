@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
-import Exhaust from './vehicles/exhaust';
+import Car from './vehicles/car';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -52,15 +52,28 @@ document.addEventListener("keydown", function(e) {
 
         // Hide CSS elements
         document.getElementById("container").style.display = "none";
+        let user = scene.user;
 
         //switch scene
         //below is my scene to test objects created 
         scene = new ObjectViewerScene(renderer);
-        let testObj = new Exhaust(scene);
+        user.translateZ(-20);
+        scene.add(user);
+
+        /*
+        let testObj = new Exhaust();
         scene.add(testObj);
         testObj.start();
-
         objToUpdate.push(testObj);
+        */
+
+        let car = new Car();
+        scene.add(car);
+
+        car.start();
+        
+        objToUpdate.push(car);
+
 
         break;
     }
