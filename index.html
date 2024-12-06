@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Road Game</title>
+    <title>Infinite Road Game with Rivers</title>
     <style>
         body {
             margin: 0;
@@ -28,20 +28,45 @@
     const roadWidth = canvas.width;
     let scrollOffset = 0;
 
-    function drawRoad() {
+    // Configuration for lanes
+    const laneTypes = ["road", "river"]; // Two types of lanes
+    const totalLanes = 15; // Number of lanes to display
+    const laneSequence = Array.from({ length: totalLanes }, (_, i) =>
+        laneTypes[Math.floor(Math.random() * laneTypes.length)]
+    );
+
+    function drawLanes() {
         for (let i = 0; i < canvas.height / laneHeight + 2; i++) {
             const laneY = (i * laneHeight) - (scrollOffset % laneHeight);
-            ctx.fillStyle = (i % 2 === 0) ? "#444" : "#555" ; 
-            ctx.fillRect(0, laneY, roadWidth, laneHeight);
+            const laneType = laneSequence[i % totalLanes]; // Cycle through lane types
 
-            // Draw lane dividers
-            if (i % 2 === 0) {
-                ctx.strokeStyle = "#FFF";
-                ctx.lineWidth = 4;
+            if (laneType === "road") {
+                // Draw road
+                ctx.fillStyle = (i % 2 === 0) ? "#444" : "#555"; // Alternating road colors
+                ctx.fillRect(0, laneY, roadWidth, laneHeight);
+
+                // Draw lane dividers
+                if (i % 2 === 0) {
+                    ctx.strokeStyle = "#FFF";
+                    ctx.lineWidth = 4;
+                    for (let j = 0; j < roadWidth / 50; j++) {
+                        ctx.beginPath();
+                        ctx.moveTo(j * 60 + 20, laneY + laneHeight / 2);
+                        ctx.lineTo(j * 60 + 40, laneY + laneHeight / 2);
+                        ctx.stroke();
+                    }
+                }
+            } else if (laneType === "river") {
+                // Draw river
+                ctx.fillStyle = "#1E90FF"; // Water blue
+                ctx.fillRect(0, laneY, roadWidth, laneHeight);
+
+                // Draw waves (simple arcs)
+                ctx.strokeStyle = "#87CEFA"; // Lighter blue for waves
+                ctx.lineWidth = 2;
                 for (let j = 0; j < roadWidth / 50; j++) {
                     ctx.beginPath();
-                    ctx.moveTo(j * 60 + 20, laneY + laneHeight / 2);
-                    ctx.lineTo(j * 60 + 40, laneY + laneHeight / 2);
+                    ctx.arc(j * 60 + 30, laneY + laneHeight / 2, 10, 0, Math.PI);
                     ctx.stroke();
                 }
             }
@@ -51,11 +76,11 @@
     function gameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Scroll the road
+        // Scroll the road and river
         scrollOffset += 2;
 
-        // Draw the road
-        drawRoad();
+        // Draw lanes
+        drawLanes();
 
         requestAnimationFrame(gameLoop);
     }
@@ -64,4 +89,5 @@
 </script>
 </body>
 </html>
+
 
