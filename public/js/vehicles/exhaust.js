@@ -1,15 +1,14 @@
 import * as THREE from 'three';
 
-
 export default class Exhaust extends THREE.Group {
-    constructor(scene) {
+    constructor() {
         super();
 
         let texture = new THREE.TextureLoader().load("public/textures/Metal053C_1K-PNG_Color.png");
         let metalMap = new THREE.TextureLoader().load("public/textures/Metal053C_1K-PNG_Metalness.png")
 
         // Sets the body and head of the character
-        this.body = new THREE.CylinderGeometry(2, 3, 8, 32);
+        this.body = new THREE.CylinderGeometry(0.5, 1, 3, 32);
         let bodyMaterial = new THREE.MeshPhongMaterial({ 
             color: 0xa4ad97, reflectivity: 10, shininess: 10, map: texture, bumpMap: metalMap
         });
@@ -17,21 +16,22 @@ export default class Exhaust extends THREE.Group {
 
         this.bodyMesh.castShadow = true;
         this.bodyMesh.receiveShadow = true;
+        this.rotateX(Math.PI/2);
 
         this.add(this.bodyMesh);
-        this.scene = scene;
-        this.scene.add(this);
-        this.particles = [];
 
-        this.rotateX(Math.PI/2);
+        this.particles = [];
     }
 
     start() {
         for (let i = 0; i < 10; i++){
             let p1 = new particle(this);
-            this.scene.add(p1.mesh);
-            p1.mesh.translateY(this.position.y);
-            p1.mesh.translateZ(this.position.z + 5)
+
+            this.add(p1.mesh);
+            p1.mesh.position.x = this.bodyMesh.position.x;
+            p1.mesh.position.y = this.bodyMesh.position.y;
+            p1.mesh.position.z = this.bodyMesh.position.z;
+
             this.particles.push(p1);
         }
     }
@@ -41,9 +41,9 @@ export default class Exhaust extends THREE.Group {
             part.update(deltaTime);
 
             if (part.mesh.position.distanceTo(this.position) > 38) {
-                part.mesh.position.x = this.position.x;
-                part.mesh.position.y = this.position.y;
-                part.mesh.position.z = this.position.z + 5;
+                part.mesh.position.x = this.bodyMesh.position.x;
+                part.mesh.position.y = this.bodyMesh.position.y + 2;
+                part.mesh.position.z = this.bodyMesh.position.z;
                 part.mat.opacity = 1
             }
         }
@@ -66,7 +66,7 @@ class particle {
         group.add( this.mesh );
 
         this.velocity = new THREE.Vector3(
-            THREE.MathUtils.randFloatSpread(10),THREE.MathUtils.randFloatSpread(10) + 9.8, THREE.MathUtils.randFloatSpread(10))
+            THREE.MathUtils.randFloatSpread(10),THREE.MathUtils.randFloatSpread(10) + 5, THREE.MathUtils.randFloatSpread(10) - 5)
     }
 
     update(deltaTime) {
