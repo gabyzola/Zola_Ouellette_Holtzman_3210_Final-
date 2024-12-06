@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Road Game with Rivers</title>
+    <title>Infinite Road Game</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background: #87CEEB; /* Sky blue */
+            background: #87CEEB; 
         }
         canvas {
             display: block;
@@ -26,49 +26,54 @@
 
     const laneHeight = 100;
     const roadWidth = canvas.width;
+    const scrollSpeed = 1;
     let scrollOffset = 0;
 
-    // Configuration for lanes
-    const laneTypes = ["road", "river"]; // Two types of lanes
-    const totalLanes = 15; // Number of lanes to display
-    const laneSequence = Array.from({ length: totalLanes }, (_, i) =>
-        laneTypes[Math.floor(Math.random() * laneTypes.length)]
-    );
+    // Fixed lane order for smooth transitions
+    const laneSequence = ["road", "river", "grass", "road", "grass", "river"]; 
+    const totalLanes = laneSequence.length; 
 
     function drawLanes() {
-        for (let i = 0; i < canvas.height / laneHeight + 2; i++) {
+        
+        const visibleLanes = Math.ceil(canvas.height / laneHeight) + 2;
+
+        for (let i = 0; i < visibleLanes; i++) {
             const laneY = (i * laneHeight) - (scrollOffset % laneHeight);
-            const laneType = laneSequence[i % totalLanes]; // Cycle through lane types
+            const laneType = laneSequence[i % totalLanes]; 
 
             if (laneType === "road") {
                 // Draw road
-                ctx.fillStyle = (i % 2 === 0) ? "#444" : "#555"; // Alternating road colors
+                ctx.fillStyle = "#444"; 
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
 
                 // Draw lane dividers
-                if (i % 2 === 0) {
-                    ctx.strokeStyle = "#FFF";
-                    ctx.lineWidth = 4;
-                    for (let j = 0; j < roadWidth / 50; j++) {
-                        ctx.beginPath();
-                        ctx.moveTo(j * 60 + 20, laneY + laneHeight / 2);
-                        ctx.lineTo(j * 60 + 40, laneY + laneHeight / 2);
-                        ctx.stroke();
-                    }
+                ctx.strokeStyle = "#FFF";
+                ctx.lineWidth = 4;
+                for (let j = 0; j < roadWidth / 60; j++) {
+                    ctx.beginPath();
+                    ctx.moveTo(j * 80 + 20, laneY + laneHeight / 2);
+                    ctx.lineTo(j * 80 + 50, laneY + laneHeight / 2);
+                    ctx.stroke();
                 }
             } else if (laneType === "river") {
                 // Draw river
                 ctx.fillStyle = "#1E90FF"; // Water blue
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
 
-                // Draw waves (simple arcs)
-                ctx.strokeStyle = "#87CEFA"; // Lighter blue for waves
-                ctx.lineWidth = 2;
-                for (let j = 0; j < roadWidth / 50; j++) {
+                // Draw stones
+                for (let j = 0; j < roadWidth / 150; j++) {
+                    ctx.fillStyle = "#D3D3D3"; 
+                    const stoneX = j * 150 + 50; 
+                    const stoneY = laneY + laneHeight / 2;
                     ctx.beginPath();
-                    ctx.arc(j * 60 + 30, laneY + laneHeight / 2, 10, 0, Math.PI);
-                    ctx.stroke();
+                    ctx.arc(stoneX, stoneY, 10, 0, Math.PI * 2); 
+                    ctx.fill();
                 }
+            } else if (laneType === "grass") {
+                // Draw grass
+                ctx.fillStyle = "#228B22"; 
+                ctx.fillRect(0, laneY, roadWidth, laneHeight);
+
             }
         }
     }
@@ -76,18 +81,23 @@
     function gameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Scroll the road and river
-        scrollOffset += 2;
+        // Increment scroll offset by the scroll speed
+        scrollOffset += scrollSpeed;
 
-        // Draw lanes
+        // Draw all lanes
         drawLanes();
 
+        // Request the next frame
         requestAnimationFrame(gameLoop);
     }
 
+    // Start the game loop
     gameLoop();
 </script>
 </body>
 </html>
+
+
+
 
 
