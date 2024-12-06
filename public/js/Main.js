@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import UserScene from './UserScene';
+import ObjectViewerScene from "./ObjectViewerScene";
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Create a new UserScene
-const scene = new UserScene(renderer);
+let scene = new UserScene(renderer);
 
 // Add the scene to the document
 function animate() {
@@ -38,6 +39,16 @@ colorPickerHead.addEventListener("change", function() {
 // Add a keyboard short cuts
 document.addEventListener("keydown", function(e) {
     switch (e.key) {
+    case "Enter": 
+        console.log("Going to next scene ");
+
+        // Hide CSS elements
+        document.getElementById("container").style.display = "none";
+
+        //switch scene
+        //below is my scene to test objects created 
+        scene = new ObjectViewerScene(renderer);
         
+        break;
     }
 });
