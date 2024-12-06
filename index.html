@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Road Game</title>
+    <title>Smooth Infinite Road Game</title>
     <style>
         body {
-            margin: 0;
+            margin: 0; 
             overflow: hidden;
-            background: #87CEEB; 
+            background: #87CEEB;
         }
         canvas {
             display: block;
@@ -26,24 +26,23 @@
 
     const laneHeight = 100;
     const roadWidth = canvas.width;
-    const scrollSpeed = 1;
+    const scrollSpeed = 0.5; // Slow down the scroll speed for smoothness
     let scrollOffset = 0;
 
     // Fixed lane order for smooth transitions
-    const laneSequence = ["road", "river", "grass", "road", "grass", "river"]; 
-    const totalLanes = laneSequence.length; 
+    const laneSequence = ["road", "river", "grass", "road", "grass", "river", "road", "river", "grass", "road", "grass", "river"];
+    const totalLanes = laneSequence.length;
 
     function drawLanes() {
-        
         const visibleLanes = Math.ceil(canvas.height / laneHeight) + 2;
 
         for (let i = 0; i < visibleLanes; i++) {
             const laneY = (i * laneHeight) - (scrollOffset % laneHeight);
-            const laneType = laneSequence[i % totalLanes]; 
+            const laneType = laneSequence[i % totalLanes];
 
             if (laneType === "road") {
                 // Draw road
-                ctx.fillStyle = "#444"; 
+                ctx.fillStyle = "#444";
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
 
                 // Draw lane dividers
@@ -57,23 +56,22 @@
                 }
             } else if (laneType === "river") {
                 // Draw river
-                ctx.fillStyle = "#1E90FF"; // Water blue
+                ctx.fillStyle = "#1E90FF"; 
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
 
                 // Draw stones
                 for (let j = 0; j < roadWidth / 150; j++) {
-                    ctx.fillStyle = "#D3D3D3"; 
-                    const stoneX = j * 150 + 50; 
+                    ctx.fillStyle = "#D3D3D3";
+                    const stoneX = j * 150 + 50 - (scrollOffset % 150); 
                     const stoneY = laneY + laneHeight / 2;
                     ctx.beginPath();
-                    ctx.arc(stoneX, stoneY, 10, 0, Math.PI * 2); 
+                    ctx.arc(stoneX, stoneY, 10, 0, Math.PI * 2);
                     ctx.fill();
                 }
             } else if (laneType === "grass") {
                 // Draw grass
-                ctx.fillStyle = "#228B22"; 
+                ctx.fillStyle = "#228B22";
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
-
             }
         }
     }
@@ -81,13 +79,18 @@
     function gameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Increment scroll offset by the scroll speed
+        // Increment scroll offset gradually by the scroll speed
         scrollOffset += scrollSpeed;
+
+        // Wrap around when the scroll reaches the total length of the lanes
+        if (scrollOffset >= laneHeight * totalLanes) {
+            scrollOffset = 0; 
+        }
 
         // Draw all lanes
         drawLanes();
 
-        // Request the next frame
+        // Request the next frame, ensuring a consistent frame rate
         requestAnimationFrame(gameLoop);
     }
 
@@ -96,6 +99,8 @@
 </script>
 </body>
 </html>
+
+
 
 
 
