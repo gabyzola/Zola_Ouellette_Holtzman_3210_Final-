@@ -14,6 +14,7 @@ document.body.appendChild(stats.dom);
 // Create a new UserScene
 const scene = new UserScene(renderer);
 var user = scene.user;
+var customUser = user;
 
 // Add the scene to the document
 function animate() {
@@ -22,7 +23,9 @@ function animate() {
     requestAnimationFrame(animate);
     scene.controls.update();
     renderer.render(scene, scene.camera);
-
+    if (user instanceof CustomUser) {
+        customUser = user;
+    }
     stats.end();
 }
 animate();
@@ -63,7 +66,7 @@ presetSelector.addEventListener("change", function() {
         case "none":
             document.getElementById("noPresets").style.display = "flex";
             scene.remove(user);
-            user = new CustomUser();
+            user = customUser   ;
             scene.add(user);
         break;
         case "nachos":
@@ -100,13 +103,17 @@ emissiveButtonBody.addEventListener("click", function() {
 colorPickerBody.addEventListener("change", function() {
     curColorBody = this.value;
     user.bodySetMaterial(curColorBody);
-    user.bodyMesh.material.emissive.set(curColorBody);
+    if (emissiveBody) {
+        user.bodyMesh.material.emissive.set(curColorBody);
+    }
 });
 
 colorPickerHead.addEventListener("change", function() {
     curColorHead = this.value;
     user.headSetMaterial(curColorHead);
-    user.headMesh.material.emissive.set(curColorHead);
+    if (emissiveHead) {
+        user.headMesh.material.emissive.set(curColorHead);
+    }
 });
 
 shinySliderHead.addEventListener("change", function() {
@@ -168,7 +175,7 @@ texturePickerHead.addEventListener("change", function() {
             user.headMesh.material.color = new THREE.Color(0xffd700);
         break;
         case "fabric":
-            var color = user.bodyMesh.material.color;
+            var color = user.headMesh.material.color;
             user.headSetTexture("./public/texture/FabricTexture.png", "./public/texture/FabricTextureNormal.png");
             user.headMesh.material.color = color;
             user.headMesh.material.shininess = shinynessHead

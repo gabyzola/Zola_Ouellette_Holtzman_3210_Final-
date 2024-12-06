@@ -33,7 +33,7 @@ export default class CustomUser extends User {
      * @param {STRING} color this is the color of the material
      */
     bodySetMaterial(color) {
-        super.bodyMesh.material.color.set(color);
+        this.bodyMesh.material.color.set(color);
     }
 
     /**
@@ -46,7 +46,7 @@ export default class CustomUser extends User {
         var texture = new THREE.TextureLoader().load(path);
         var normal = new THREE.TextureLoader().load(normalPath);
         var material = new THREE.MeshPhongMaterial({ map: texture, normalMap: normal });
-        super.bodyMesh.material = material;
+        this.bodyMesh.material = material;
     }   
 
     /**
@@ -55,7 +55,7 @@ export default class CustomUser extends User {
      * @param {STRING} color of choice
      */
     headSetMaterial(color) {
-        super.headMesh.material.color.set(color);
+        this.headMesh.material.color.set(color);
     }
 
     /**
@@ -68,7 +68,7 @@ export default class CustomUser extends User {
         var texture = new THREE.TextureLoader().load(path);
         var normal = new THREE.TextureLoader().load(normalPath);
         var material = new THREE.MeshPhongMaterial({ map: texture, normalMap: normal });
-        super.headMesh.material = material
+        this.headMesh.material = material
             
     }
 
