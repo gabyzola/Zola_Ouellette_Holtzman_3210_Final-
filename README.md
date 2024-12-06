@@ -11,3 +11,6 @@ This project is like crossy road where your goal is to cross a given area withou
 - [Sean Ouellette](https://github.com/SOuellette22): [ouellettese04@gmail.com](ouellettese04@gmail.com)
 - [Seth Holtzman](https://github.com/SethMC26):
 - [Gaby Zola](https://github.com/gabyzola):
+
+## Texture sources 
+- [Metal053C](ambientCG.com/a/Metal053C) from ambientCG
