@@ -1,18 +1,29 @@
 import * as THREE from 'three';
-import UserScene from './UserScene';
+import UserScene from './UserScene.js';
+import Stats from 'https://unpkg.com/three@0.141.0/examples/jsm/libs/stats.module.js';
+import Oracle from './Oracle.js';
+import CustomUser from './CustomUser.js';
+import Nachos from './Nachos.js';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+const stats = new Stats();
+document.body.appendChild(stats.dom);
+
 // Create a new UserScene
 const scene = new UserScene(renderer);
-const user = scene.user;
+var user = scene.user;
 
 // Add the scene to the document
 function animate() {
+    stats.begin();
+
     requestAnimationFrame(animate);
     scene.controls.update();
     renderer.render(scene, scene.camera);
+
+    stats.end();
 }
 animate();
 
@@ -31,6 +42,7 @@ const shinySliderHead = document.getElementById("shinySliderHead");
 const shinySliderBody = document.getElementById("shinySliderBody");
 const emissiveButtonHead = document.getElementById("emessiveHead");
 const emissiveButtonBody = document.getElementById("emessiveBody");
+const presetSelector = document.getElementById("presetSelector");
 
 var curColorBody = 0xff0000;
 var curColorHead = 0xff0000;
@@ -38,6 +50,30 @@ var shinynessHead = 0;
 var shinynessBody = 0;
 var emissiveHead = false;
 var emissiveBody = false;
+
+presetSelector.addEventListener("change", function() {
+    var preset = this.value;
+    switch (preset) {
+        case "oracle":
+            document.getElementById("noPresets").style.display = "none";
+            scene.remove(user);
+            user = new Oracle();
+            scene.add(user);
+        break;
+        case "none":
+            document.getElementById("noPresets").style.display = "flex";
+            scene.remove(user);
+            user = new CustomUser();
+            scene.add(user);
+        break;
+        case "nachos":
+            document.getElementById("noPresets").style.display = "none";
+            scene.remove(user);
+            user = new Nachos();
+            scene.add(user);
+        break;
+    }
+});
 
 emissiveButtonHead.addEventListener("click", function() {
     emissiveHead = !emissiveHead;
@@ -99,7 +135,7 @@ texturePickerBody.addEventListener("change", function() {
         break;
         case "plastic":
             user.bodySetTexture("./public/texture/PlasticTexture.png", "./public/texture/PlasticTextureNormal.png");
-            user.bodyMesh.material.opacity = 0.50;
+            user.bodyMesh.material.opacity = 0.75;
             user.bodyMesh.material.shininess = shinynessBody;
             user.bodyMesh.material.transparent = true;
         break;
@@ -145,7 +181,7 @@ texturePickerHead.addEventListener("change", function() {
         break;
         case "plastic":
             user.headSetTexture("./public/texture/PlasticTexture.png", "./public/texture/PlasticTextureNormal.png");
-            user.headMesh.material.opacity = 0.50;
+            user.headMesh.material.opacity = 0.75;
             user.headMesh.material.transparent = true;
         break;
         case "wood":
@@ -162,6 +198,9 @@ texturePickerHead.addEventListener("change", function() {
 // Add a keyboard short cuts
 document.addEventListener("keydown", function(e) {
     switch (e.key) {
-        
+        case 'r':
+            if (scene instanceof UserScene) {
+                scene.controls.autoRotate = !scene.controls.autoRotate;
+            }
     }
 });
