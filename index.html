@@ -3,10 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Infinite Road Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #87CEEB; /* Sky blue */
+        }
+        canvas {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <script type="module" src="/Main.js"></script>
+<canvas id="gameCanvas"></canvas>
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const laneHeight = 100;
+    const roadWidth = canvas.width;
+    let scrollOffset = 0;
+
+    function drawRoad() {
+        for (let i = 0; i < canvas.height / laneHeight + 2; i++) {
+            const laneY = (i * laneHeight) - (scrollOffset % laneHeight);
+            ctx.fillStyle = (i % 2 === 0) ? "#444" : "#555" ; 
+            ctx.fillRect(0, laneY, roadWidth, laneHeight);
+
+            // Draw lane dividers
+            if (i % 2 === 0) {
+                ctx.strokeStyle = "#FFF";
+                ctx.lineWidth = 4;
+                for (let j = 0; j < roadWidth / 50; j++) {
+                    ctx.beginPath();
+                    ctx.moveTo(j * 60 + 20, laneY + laneHeight / 2);
+                    ctx.lineTo(j * 60 + 40, laneY + laneHeight / 2);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Scroll the road
+        scrollOffset += 2;
+
+        // Draw the road
+        drawRoad();
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+</script>
 </body>
 </html>
+
