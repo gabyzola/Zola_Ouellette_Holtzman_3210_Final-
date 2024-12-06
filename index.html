@@ -8,7 +8,6 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: #87CEEB; /* Sky blue */
         }
         canvas {
             display: block;
@@ -21,62 +20,95 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Function to resize the canvas to fill the screen
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    // Resize the canvas when the window is resized
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); 
 
     const laneHeight = 100;
     const roadWidth = canvas.width;
-    const scrollSpeed = 0.5; // Slow scroll speed for smoothness
-    let scrollOffset = 0;
+    const scrollSpeed = 0.5; 
 
     // Lane sequence: alternating between roads and grass
     const laneSequence = ["road", "grass", "road", "grass", "road", "grass"];
     const totalLanes = laneSequence.length;
 
+    let lanes = [];
+
+    // Initialize the lanes off-screen
+    function initializeLanes() {
+        lanes = [];
+        const visibleLanes = Math.ceil(canvas.height / laneHeight) + 2;
+
+        for (let i = 0; i < visibleLanes; i++) {
+            lanes.push({
+                y: i * laneHeight,  
+                type: laneSequence[i % totalLanes], 
+            });
+        }
+    }
+
     // Function to draw flowers on the grass lanes
     function drawFlowers(laneY) {
-        const flowerCount = 5; // Number of flowers per grass lane
+        const flowerCount = 2;
         for (let i = 0; i < flowerCount; i++) {
-            const flowerX = Math.random() * roadWidth; // Random X position within the lane width
-            const flowerY = laneY + Math.random() * (laneHeight - 20) + 10; // Random Y position within the grass lane
+            const flowerX = Math.random() * roadWidth; 
+            const flowerY = laneY + Math.random() * (laneHeight - 20) + 10;
 
-            // Draw flower (simple circle for illustration)
-            ctx.fillStyle = "#FFD700"; // Yellow color for flower
+            // Draw flower
+            ctx.fillStyle = "magenta";
             ctx.beginPath();
-            ctx.arc(flowerX, flowerY, 10, 0, Math.PI * 2); // Simple flower shape
+            ctx.arc(flowerX, flowerY, 10, 0, Math.PI * 2); 
             ctx.fill();
         }
     }
 
     // Function to draw lanes at a specific offset
     function drawLanes() {
-        const visibleLanes = Math.ceil(canvas.height / laneHeight) + 2;
+        for (let i = 0; i < lanes.length; i++) {
+            const lane = lanes[i];
 
-        for (let i = 0; i < visibleLanes; i++) {
-            const laneY = (i * laneHeight) - (scrollOffset % laneHeight);
-            const laneType = laneSequence[i % totalLanes];
-
-            if (laneType === "road") {
+            // Draw the lane based on its type
+            if (lane.type === "road") {
                 // Draw road
                 ctx.fillStyle = "#444";
-                ctx.fillRect(0, laneY, roadWidth, laneHeight);
+                ctx.fillRect(0, lane.y, roadWidth, laneHeight);
 
                 // Draw lane dividers (simple dashed lines for the road)
                 ctx.strokeStyle = "#FFF";
                 ctx.lineWidth = 4;
                 for (let j = 0; j < roadWidth / 60; j++) {
                     ctx.beginPath();
-                    ctx.moveTo(j * 80 + 20, laneY + laneHeight / 2);
-                    ctx.lineTo(j * 80 + 50, laneY + laneHeight / 2);
+                    ctx.moveTo(j * 80 + 20, lane.y + laneHeight / 2);
+                    ctx.lineTo(j * 80 + 50, lane.y + laneHeight / 2);
                     ctx.stroke();
                 }
-            } else if (laneType === "grass") {
+            } else if (lane.type === "grass") {
                 // Draw grass
-                ctx.fillStyle = "#228B22"; // Green color for grass
-                ctx.fillRect(0, laneY, roadWidth, laneHeight);
+                ctx.fillStyle = "green"; 
+                ctx.fillRect(0, lane.y, roadWidth, laneHeight);
 
-                // Draw stationary flowers on the grass lane
-                drawFlowers(laneY);
+                // Draw flowers on the grass lane
+                drawFlowers(lane.y);
+            }
+        }
+    }
+
+    // Update the lanes' positions and reset their position when they go off-screen
+    function updateLanes() {
+        for (let i = 0; i < lanes.length; i++) {
+            const lane = lanes[i];
+            lane.y += scrollSpeed;
+
+            // Once a lane goes off the screen, reset it to the top
+            if (lane.y >= canvas.height) {
+                lane.y = -laneHeight;  
+                lane.type = laneSequence[Math.floor(Math.random() * totalLanes)]; 
             }
         }
     }
@@ -84,26 +116,22 @@
     function gameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Increment scroll offset gradually by the scroll speed
-        scrollOffset += scrollSpeed;
-
-        // Once a lane moves off the screen, reset it to the top to create a smooth loop
-        if (scrollOffset >= laneHeight) {
-            scrollOffset = 0;
-        }
-
-        // Draw all lanes
+        // Update and draw lanes
+        updateLanes();
         drawLanes();
 
         // Request the next frame
         requestAnimationFrame(gameLoop);
     }
 
-    // Start the game loop
+    // Initialize the lanes and start the game loop
+    initializeLanes();
     gameLoop();
 </script>
 </body>
 </html>
+
+
 
 
 
