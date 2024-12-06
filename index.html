@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Infinite Road Game</title>
+    <title>Infinite Road and Grass with Flowers</title>
     <style>
         body {
-            margin: 0; 
+            margin: 0;
             overflow: hidden;
-            background: #87CEEB;
+            background: #87CEEB; /* Sky blue */
         }
         canvas {
             display: block;
@@ -26,13 +26,29 @@
 
     const laneHeight = 100;
     const roadWidth = canvas.width;
-    const scrollSpeed = 0.5; // Slow down the scroll speed for smoothness
+    const scrollSpeed = 0.5; // Slow scroll speed for smoothness
     let scrollOffset = 0;
 
-    // Fixed lane order for smooth transitions
-    const laneSequence = ["road", "river", "grass", "road", "grass", "river", "road", "river", "grass", "road", "grass", "river"];
+    // Lane sequence: alternating between roads and grass
+    const laneSequence = ["road", "grass", "road", "grass", "road", "grass"];
     const totalLanes = laneSequence.length;
 
+    // Function to draw flowers on the grass lanes
+    function drawFlowers(laneY) {
+        const flowerCount = 5; // Number of flowers per grass lane
+        for (let i = 0; i < flowerCount; i++) {
+            const flowerX = Math.random() * roadWidth; // Random X position within the lane width
+            const flowerY = laneY + Math.random() * (laneHeight - 20) + 10; // Random Y position within the grass lane
+
+            // Draw flower (simple circle for illustration)
+            ctx.fillStyle = "#FFD700"; // Yellow color for flower
+            ctx.beginPath();
+            ctx.arc(flowerX, flowerY, 10, 0, Math.PI * 2); // Simple flower shape
+            ctx.fill();
+        }
+    }
+
+    // Function to draw lanes at a specific offset
     function drawLanes() {
         const visibleLanes = Math.ceil(canvas.height / laneHeight) + 2;
 
@@ -45,7 +61,7 @@
                 ctx.fillStyle = "#444";
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
 
-                // Draw lane dividers
+                // Draw lane dividers (simple dashed lines for the road)
                 ctx.strokeStyle = "#FFF";
                 ctx.lineWidth = 4;
                 for (let j = 0; j < roadWidth / 60; j++) {
@@ -54,24 +70,13 @@
                     ctx.lineTo(j * 80 + 50, laneY + laneHeight / 2);
                     ctx.stroke();
                 }
-            } else if (laneType === "river") {
-                // Draw river
-                ctx.fillStyle = "#1E90FF"; 
-                ctx.fillRect(0, laneY, roadWidth, laneHeight);
-
-                // Draw stones
-                for (let j = 0; j < roadWidth / 150; j++) {
-                    ctx.fillStyle = "#D3D3D3";
-                    const stoneX = j * 150 + 50 - (scrollOffset % 150); 
-                    const stoneY = laneY + laneHeight / 2;
-                    ctx.beginPath();
-                    ctx.arc(stoneX, stoneY, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                }
             } else if (laneType === "grass") {
                 // Draw grass
-                ctx.fillStyle = "#228B22";
+                ctx.fillStyle = "#228B22"; // Green color for grass
                 ctx.fillRect(0, laneY, roadWidth, laneHeight);
+
+                // Draw stationary flowers on the grass lane
+                drawFlowers(laneY);
             }
         }
     }
@@ -82,15 +87,15 @@
         // Increment scroll offset gradually by the scroll speed
         scrollOffset += scrollSpeed;
 
-        // Wrap around when the scroll reaches the total length of the lanes
-        if (scrollOffset >= laneHeight * totalLanes) {
-            scrollOffset = 0; 
+        // Once a lane moves off the screen, reset it to the top to create a smooth loop
+        if (scrollOffset >= laneHeight) {
+            scrollOffset = 0;
         }
 
         // Draw all lanes
         drawLanes();
 
-        // Request the next frame, ensuring a consistent frame rate
+        // Request the next frame
         requestAnimationFrame(gameLoop);
     }
 
@@ -99,6 +104,8 @@
 </script>
 </body>
 </html>
+
+
 
 
 
