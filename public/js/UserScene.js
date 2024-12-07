@@ -14,8 +14,8 @@ export default class UserScene extends THREE.Scene{
 
         // Create a camera, which determines what we'll see when we render the scene
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.z = 9;
-        this.camera.position.y = 2;
+        this.camera.position.z = 16;
+        this.camera.position.y = 4;
 
         // Add the orbit controls to the camera
         this.controls = new OrbitControls(this.camera, renderer.domElement);
@@ -56,12 +56,12 @@ export default class UserScene extends THREE.Scene{
         const group = new THREE.Group();
 
         // Create the pedestal
-        const pedestalGeometry = new THREE.CylinderGeometry(2, 2, 0.5, 32);
+        const pedestalGeometry = new THREE.CylinderGeometry(4, 4, 1, 32);
         const pedestalMaterial = new THREE.MeshPhongMaterial({color: 0x8B4513});
         const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
         pedestal.receiveShadow = true;
         pedestal.castShadow = true;
-        pedestal.position.y = -3.25;
+        pedestal.position.y = -6.5;
         group.add(pedestal);
 
         return group;
