@@ -6,9 +6,9 @@ export default class Exhaust extends THREE.Group {
 
         let texture = new THREE.TextureLoader().load("public/textures/Metal053C_1K-PNG_Color.png");
         let metalMap = new THREE.TextureLoader().load("public/textures/Metal053C_1K-PNG_Metalness.png")
-
-        // Sets the body and head of the character
-        this.body = new THREE.CylinderGeometry(0.5, 1, 3, 32);
+        
+        //add exhaust body
+        this.body = new THREE.CylinderGeometry(0.5, 1, 4, 32);
         let bodyMaterial = new THREE.MeshPhongMaterial({ 
             color: 0xa4ad97, reflectivity: 10, shininess: 10, map: texture, bumpMap: metalMap
         });
