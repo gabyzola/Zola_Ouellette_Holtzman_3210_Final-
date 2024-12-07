@@ -3,15 +3,18 @@ import Exhaust from './exhaust';
 
 
 export default class Car extends THREE.Group {
-    constructor() {
+    constructor(color) {
         super();
+        const loadManager = new THREE.LoadingManager () ;
+        const loader = new THREE.TextureLoader( loadManager );
+        this.isCar = true;
         //create car body
-        let texture = new THREE.TextureLoader().load("public/textures/Metal055A_1K-PNG_Color.png");
-        let metalMap = new THREE.TextureLoader().load("public/textures/Metal055A_1K-PNG_Metalness.png");
+        let texture = loader.load("public/textures/Metal055A_1K-PNG_Color.png");
+        let metalMap = loader.load("public/textures/Metal055A_1K-PNG_Metalness.png");
 
         let body = new THREE.BoxGeometry(12, 7, 20);
         let carMat = new THREE.MeshPhongMaterial({ 
-            color: 0x08080, reflectivity: 10, shininess: 10, map: texture, bumpMap: metalMap
+            color: color, reflectivity: 10, shininess: 10, map: texture, bumpMap: metalMap
         });
         this.bodyMesh = new THREE.Mesh(body, carMat);
 
@@ -21,9 +24,16 @@ export default class Car extends THREE.Group {
         this.add(this.bodyMesh);
         
         //create cab
-        let cab = new THREE.CapsuleGeometry( 5, 6, 8, 8 ); 
-        let cabText = new THREE.TextureLoader().load("public/textures/Metal032_1K-PNG_Color.png");
-        let metalCabMap = new THREE.TextureLoader().load("public/textures/Metal032_1K-PNG_Metalness.png");
+        let cab;
+        if (Math.random() > 0.5) {
+            cab = new THREE.CapsuleGeometry( 5, 6, 8, 8 ); 
+        }
+        else {
+            cab = new THREE.BoxGeometry(11,12,7);
+        }
+
+        let cabText = loader.load("public/textures/Metal032_1K-PNG_Color.png");
+        let metalCabMap = loader.load("public/textures/Metal032_1K-PNG_Metalness.png");
 
         let cabMat = new THREE.MeshPhongMaterial({ 
             color: 0xFFFFFF, reflectivity: 25, shininess: 100, map: cabText, bumpMap: metalCabMap
@@ -49,8 +59,8 @@ export default class Car extends THREE.Group {
         this.wheels = [];
 
         let wheel = new THREE.CylinderGeometry( 3, 3, 3, 32 ); 
-        let wheelTexture = new THREE.TextureLoader().load("public/textures/Rubber004_1K-JPG_Color.jpg");
-        let displacementTexture = new THREE.TextureLoader().load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
+        let wheelTexture = loader.load("public/textures/Rubber004_1K-JPG_Color.jpg");
+        let displacementTexture = loader.load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
 
         let wheelMat = new THREE.MeshPhongMaterial({
             color: 0x97a18d, map: wheelTexture, bumpMap: displacementTexture
@@ -111,7 +121,7 @@ export default class Car extends THREE.Group {
         this.add(this.spotLightLeft.target);
 
         let spotLightHelper = new THREE.SpotLightHelper( this.spotLightLeft );
-        this.add( spotLightHelper );
+        //this.add( spotLightHelper );
 
 
         let headLightRightMesh = headLightLeftMesh.clone();
@@ -126,7 +136,7 @@ export default class Car extends THREE.Group {
         this.add(this.spotLightRight.target);
 
         let spotLightHelper2 = new THREE.SpotLightHelper( this.spotLightRight );
-        this.add( spotLightHelper2 );
+        //this.add( spotLightHelper2 );
 
         this.translateY(2);
     }
@@ -142,6 +152,6 @@ export default class Car extends THREE.Group {
         for (let wheel of this.wheels) {
             wheel.rotateY(Math.PI/2 * deltaTime);
         }
-        //this.translateZ(-3 * deltaTime);
+        this.translateZ(-1 * deltaTime);
     }
 }
