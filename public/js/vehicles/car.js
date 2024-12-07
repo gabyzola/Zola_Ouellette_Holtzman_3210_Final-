@@ -176,4 +176,13 @@ export default class Car extends THREE.Group {
         this.translateZ( this.carSpeed * deltaTime );
 
     }
+
+    /**
+     * Check if a bounding box intersect's this car's bounding box 
+     * @param {THREE.Box3} targetBoundingBox 
+     * @returns true if intersecting false otherwise
+     */
+    isIntersecting(targetBoundingBox) {
+        return this.boundingBox.intersectsBox(targetBoundingBox);
+    }
 }

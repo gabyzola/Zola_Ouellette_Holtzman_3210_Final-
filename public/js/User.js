@@ -29,8 +29,6 @@ export default class User extends THREE.Group {
         this.boundingBox = new THREE.Box3().setFromObject(this);
         console.log(this.boundingBox);
         
-        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
-        this.add(boxHelper);
     }
 
     /**
@@ -72,6 +70,13 @@ export default class User extends THREE.Group {
         var material = new THREE.MeshBasicMaterial({ map: texture });
         this.headMesh.material = material
             
+    }
+
+    setBoundingBox() {
+        this.boundingBox = new THREE.Box3().setFromObject(this);
+        console.log(this.boundingBox);
+        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
+        this.add(boxHelper);
     }
 
 }

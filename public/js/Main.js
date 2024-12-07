@@ -67,13 +67,22 @@ function animate() {
 
             //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
             //this keeps the number of lights casting shadows low 
-           if (obj.position.x - user.position.x === 0 && obj.spotLight.id != lastSpotLight.id) {
-                console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
+           if (obj.position.x - user.position.x === 0 ) {
+                //avoiding turning the same light on multiple times 
+                if (obj.spotLight.id != lastSpotLight.id) {
+                    console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
 
-                lastSpotLight.castShadow = false;
-                obj.spotLight.castShadow = true;
+                    lastSpotLight.castShadow = false;
+                    obj.spotLight.castShadow = true;
+    
+                    lastSpotLight = obj.spotLight;
+                }
+                
+                //console.log(obj.isIntersecting(user.boundingBox))
 
-                lastSpotLight = obj.spotLight;
+                if (obj.isIntersecting(user.boundingBox)) {
+                    console.warn("car hit player")
+                }
             }
         }
     }
@@ -140,13 +149,16 @@ document.addEventListener("keydown", function(e) {
             document.getElementById("container").style.display = "none";
             //set user
             user = scene.user;
+
+            //add user to new scene 
+            objScene.add(user);
+            user.translateZ(-20);
+
             //switch scene 
             scene = objScene;
             
-            user.translateZ(-20);
-            //add user to new scene 
-            objScene.add(user);
-
+            user.setBoundingBox();
+            
             hasSwitched = true;
             break;
     }
