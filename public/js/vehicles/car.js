@@ -108,8 +108,14 @@ export default class Car extends THREE.Group {
 
         this.add(headLightLeftMesh);
 
-        this.spotLightLeft = new THREE.SpotLight( 0xfcd268, 10000);
-        this.spotLightLeft.position.set(headLightLeftMesh.position.x, headLightLeftMesh.position.y, headLightLeftMesh.position.z);
+        //make bounding box before adding lights to avoid odd issues with helper meshes 
+        this.boundingBox = new THREE.Box3().setFromObject(this);
+
+        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
+        this.add(boxHelper);
+
+        this.spotLightLeft = new THREE.SpotLight( 0xa902eb, 10000, 75, Math.PI/8);
+        this.spotLightLeft.position.set(headLightLeftMesh.position.x, headLightLeftMesh.position.y, headLightLeftMesh.position.z - 0.75);
         this.spotLightLeft.castShadow = true;
 
         //create target, note may need to change this 
@@ -121,7 +127,7 @@ export default class Car extends THREE.Group {
         this.add(this.spotLightLeft.target);
 
         let spotLightHelper = new THREE.SpotLightHelper( this.spotLightLeft );
-        //this.add( spotLightHelper );
+        this.add( spotLightHelper );
 
 
         let headLightRightMesh = headLightLeftMesh.clone();
@@ -136,14 +142,10 @@ export default class Car extends THREE.Group {
         this.add(this.spotLightRight.target);
 
         let spotLightHelper2 = new THREE.SpotLightHelper( this.spotLightRight );
-        //this.add( spotLightHelper2 );
+        this.add( spotLightHelper2 );
 
         this.translateY(2);
 
-        this.boundingBox = new THREE.Box3().setFromObject(this);
-
-        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
-        this.add(boxHelper);
     }
 
     start() {
