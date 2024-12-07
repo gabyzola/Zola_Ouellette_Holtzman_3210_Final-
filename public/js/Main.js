@@ -33,7 +33,7 @@ for (let i = 0; i < 10; i++) {
     let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
     car.position.x = -i * jumpSize;
-    car.position.z = 50;
+    car.position.z = THREE.MathUtils.randFloat(0, 100);
     car.start();
     objToUpdate.push(car);
 }
@@ -94,7 +94,7 @@ document.addEventListener("keydown", function(e) {
             user.translateX(-jumpSize); 
 
             if (user.position.x - jumpSize < farest) {
-                objScene.camera.translateZ(-jumpSize);
+                objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
             }
 
