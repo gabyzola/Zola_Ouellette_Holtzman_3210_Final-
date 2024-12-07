@@ -13,8 +13,27 @@ let hasSwitched = false;
 // Create a new UserScene
 let scene = new UserScene(renderer);
 
+let objScene =  new ObjectViewerScene(renderer);
+
+
 // hold objects to update, all object MUST have an update function 
 let objToUpdate = [];
+
+/*
+let testObj = new Exhaust();
+scene.add(testObj);
+testObj.start();
+objToUpdate.push(testObj);
+*/
+
+for (let i = -5; i < 5; i++) {
+    let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
+    objScene.add(car);
+    car.position.x = i * 30;
+    car.start();
+    objToUpdate.push(car);
+}
+
 
 // Add the scene to the document
 function animate() {
@@ -60,25 +79,12 @@ document.addEventListener("keydown", function(e) {
         document.getElementById("container").style.display = "none";
         let user = scene.user;
 
+        scene = objScene;
+
         //switch scene
         //below is my scene to test objects created 
-        scene = new ObjectViewerScene(renderer);
         user.translateZ(-20);
-        scene.add(user);
-
-        /*
-        let testObj = new Exhaust();
-        scene.add(testObj);
-        testObj.start();
-        objToUpdate.push(testObj);
-        */
-
-        let car = new Car();
-        scene.add(car);
-
-        car.start();
-        
-        objToUpdate.push(car);
+        objScene.add(user);
 
         hasSwitched = true;
         break;
