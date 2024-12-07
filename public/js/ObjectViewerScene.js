@@ -16,12 +16,9 @@ export default class UserScene extends THREE.Scene{
         this.camera.position.y = 10;
 
         this.controls = new OrbitControls(this.camera, renderer.domElement);
-        this.controls.enablePan = false;
-        this.controls.enableZoom = false;
-        this.controls.autoRotate = true;
         this.controls.update();
 
-        const light = new THREE.DirectionalLight(0xffffff, 1);
+        const light = new THREE.DirectionalLight(0xffffff, 3);
         light.position.set(1, 1, 1).normalize();
         light.castShadow = true;
         light.shadow.mapSize.width = 512;
