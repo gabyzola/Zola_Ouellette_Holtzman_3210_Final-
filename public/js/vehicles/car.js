@@ -1,10 +1,27 @@
 import * as THREE from 'three';
 import Exhaust from './exhaust';
 
-
+/**
+ * Car objects
+ * 
+ * @example
+ * let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
+ * scene.add(car)
+ * 
+ * //start particles effects
+ * car.start();
+ * 
+ * animate() {
+ *  //... animate code 
+ *  car.update(delta);
+ * }
+ */
 export default class Car extends THREE.Group {
     constructor(color) {
         super();
+        //set car speed
+        this.carSpeed = THREE.MathUtils.randFloat(-15,-5);
+
         const loadManager = new THREE.LoadingManager () ;
         const loader = new THREE.TextureLoader( loadManager );
         this.isCar = true;
@@ -137,10 +154,17 @@ export default class Car extends THREE.Group {
 
     }
 
+    /**
+     * Start particle effects of exhaust
+     */
     start() {
         this.exhaust.start();
     }
 
+    /**
+     * Update car - Moves forward, rotate wheels and update exhaust particles 
+     * @param {Int} deltaTime Time since last animation frame to update object
+     */
     update(deltaTime) {
         //update exhaust 
         this.exhaust.update(deltaTime)
@@ -148,7 +172,8 @@ export default class Car extends THREE.Group {
         for (let wheel of this.wheels) {
             wheel.rotateY(Math.PI/2 * deltaTime);
         }
-        this.translateZ(-5 * deltaTime);
+        //move forward
+        this.translateZ( this.carSpeed * deltaTime );
 
     }
 }
