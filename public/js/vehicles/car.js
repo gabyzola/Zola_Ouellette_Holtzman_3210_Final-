@@ -139,6 +139,11 @@ export default class Car extends THREE.Group {
         //this.add( spotLightHelper2 );
 
         this.translateY(2);
+
+        this.boundingBox = new THREE.Box3().setFromObject(this);
+
+        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
+        this.add(boxHelper);
     }
 
     start() {
@@ -152,6 +157,6 @@ export default class Car extends THREE.Group {
         for (let wheel of this.wheels) {
             wheel.rotateY(Math.PI/2 * deltaTime);
         }
-        this.translateZ(-1 * deltaTime);
+        this.translateZ(-5 * deltaTime);
     }
 }

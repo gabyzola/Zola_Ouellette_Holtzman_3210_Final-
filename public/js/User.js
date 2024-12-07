@@ -25,6 +25,12 @@ export default class User extends THREE.Group {
 
         this.add(this.bodyMesh);
         this.add(this.headMesh);
+
+        this.boundingBox = new THREE.Box3().setFromObject(this);
+        console.log(this.boundingBox);
+        
+        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
+        this.add(boxHelper);
     }
 
     /**
