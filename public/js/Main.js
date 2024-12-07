@@ -8,6 +8,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 const clock = new THREE.Clock();
 
+let hasSwitched = false;
+
 // Create a new UserScene
 let scene = new UserScene(renderer);
 
@@ -48,6 +50,10 @@ colorPickerHead.addEventListener("change", function() {
 document.addEventListener("keydown", function(e) {
     switch (e.key) {
     case "Enter": 
+        if (hasSwitched) {
+            return;
+        }
+
         console.log("Going to next scene ");
 
         // Hide CSS elements
@@ -74,7 +80,7 @@ document.addEventListener("keydown", function(e) {
         
         objToUpdate.push(car);
 
-
+        hasSwitched = true;
         break;
     }
 });
