@@ -15,6 +15,9 @@ let scene = new UserScene(renderer);
 
 let objScene =  new ObjectViewerScene(renderer);
 
+let user;
+let farest = 0;
+let jumpSize = 30;
 
 // hold objects to update, all object MUST have an update function 
 let objToUpdate = [];
@@ -26,10 +29,11 @@ testObj.start();
 objToUpdate.push(testObj);
 */
 
-for (let i = -5; i < 5; i++) {
+for (let i = 0; i < 10; i++) {
     let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
-    car.position.x = i * 30;
+    car.position.x = -i * jumpSize;
+    car.position.z = 50;
     car.start();
     objToUpdate.push(car);
 }
@@ -38,12 +42,25 @@ for (let i = -5; i < 5; i++) {
 // Add the scene to the document
 function animate() {
     requestAnimationFrame(animate);
-    scene.controls.update();
+    if (!hasSwitched) {
+        scene.controls.update();
+    }
     renderer.render(scene, scene.camera);
     
     let delta = clock.getDelta();
     for (let obj of objToUpdate) {
         obj.update(delta);
+
+        if (obj.isCar) {
+            if (!hasSwitched) {
+                return;
+            }
+            /**logic isnt working below  
+            if (obj.boundingBox.intersectsBox(user.boundingBox)) {
+                console.warn("Car hit player!");
+            }
+            */
+        }
     }
 }
 animate();
@@ -68,25 +85,48 @@ colorPickerHead.addEventListener("change", function() {
 // Add a keyboard short cuts
 document.addEventListener("keydown", function(e) {
     switch (e.key) {
-    case "Enter": 
-        if (hasSwitched) {
-            return;
-        }
+        case "w":
+        case "ArrowUp":
+            if (!hasSwitched) {
+                return;
+            }
 
-        console.log("Going to next scene ");
+            user.translateX(-jumpSize); 
 
-        // Hide CSS elements
-        document.getElementById("container").style.display = "none";
-        let user = scene.user;
+            if (user.position.x - jumpSize < farest) {
+                objScene.camera.translateZ(-jumpSize);
+                farest = user.position.x - jumpSize;
+            }
 
-        scene = objScene;
+            break;
+        case "s":
+        case "ArrowDown":
+            if (!hasSwitched) {
+                return;
+            }
 
-        //switch scene
-        //below is my scene to test objects created 
-        user.translateZ(-20);
-        objScene.add(user);
+            user.translateX(jumpSize);
+            break;
 
-        hasSwitched = true;
-        break;
+        case "Enter": 
+            if (hasSwitched) {
+                return;
+            }
+
+            console.log("Going to next scene ");
+
+            // Hide CSS elements
+            document.getElementById("container").style.display = "none";
+            user = scene.user;
+
+            scene = objScene;
+
+            //switch scene
+            //below is my scene to test objects created 
+            user.translateZ(-20);
+            objScene.add(user);
+
+            hasSwitched = true;
+            break;
     }
 });
