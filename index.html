@@ -3,133 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Road and Grass with Flowers</title>
+    <title>Infinite Horizontal Roads</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        canvas {
-            display: block;
-        }
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
-<canvas id="gameCanvas"></canvas>
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer;
+        const roads = [];
+        const laneWidth = 20;  
+        const roadLength = 200; 
+        const numRows = 4; 
+        const numLanes = 10; 
+        const scrollSpeed = 0.2; 
 
-    // Function to resize the canvas to fill the screen
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
+        // Initialize the scene, camera, and renderer
+        function init() {
+            scene = new THREE.Scene();
 
-    // Resize the canvas when the window is resized
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); 
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 10, 100); 
+            camera.lookAt(0, 10, 0); 
 
-    const laneHeight = 100;
-    const roadWidth = canvas.width;
-    const scrollSpeed = 0.5; 
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-    // Lane sequence: alternating between roads and grass
-    const laneSequence = ["road", "grass", "road", "grass", "road", "grass"];
-    const totalLanes = laneSequence.length;
+            // ambient light to illuminate the scene
+            const light = new THREE.AmbientLight(0x888888);
+            scene.add(light);
 
-    let lanes = [];
+            // Add a directional light to help illuminate the scene and cast shadows
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(0, 10, 10).normalize();
+            scene.add(dirLight);
 
-    // Initialize the lanes off-screen
-    function initializeLanes() {
-        lanes = [];
-        const visibleLanes = Math.ceil(canvas.height / laneHeight) + 2;
+            // the rows of roads and add them to the scene
+            createInitialRoads();
 
-        for (let i = 0; i < visibleLanes; i++) {
-            lanes.push({
-                y: i * laneHeight,  
-                type: laneSequence[i % totalLanes], 
-            });
+            window.addEventListener('resize', onWindowResize, false);
+
+            animate();
         }
-    }
 
-    // Function to draw flowers on the grass lanes
-    function drawFlowers(laneY) {
-        const flowerCount = 2;
-        for (let i = 0; i < flowerCount; i++) {
-            const flowerX = Math.random() * roadWidth; 
-            const flowerY = laneY + Math.random() * (laneHeight - 20) + 10;
-
-            // Draw flower
-            ctx.fillStyle = "magenta";
-            ctx.beginPath();
-            ctx.arc(flowerX, flowerY, 10, 0, Math.PI * 2); 
-            ctx.fill();
-        }
-    }
-
-    // Function to draw lanes at a specific offset
-    function drawLanes() {
-        for (let i = 0; i < lanes.length; i++) {
-            const lane = lanes[i];
-
-            // Draw the lane based on its type
-            if (lane.type === "road") {
-                // Draw road
-                ctx.fillStyle = "#444";
-                ctx.fillRect(0, lane.y, roadWidth, laneHeight);
-
-                // Draw lane dividers (simple dashed lines for the road)
-                ctx.strokeStyle = "#FFF";
-                ctx.lineWidth = 4;
-                for (let j = 0; j < roadWidth / 60; j++) {
-                    ctx.beginPath();
-                    ctx.moveTo(j * 80 + 20, lane.y + laneHeight / 2);
-                    ctx.lineTo(j * 80 + 50, lane.y + laneHeight / 2);
-                    ctx.stroke();
+        // Create initial roads immediately in front of the camera
+        function createInitialRoads() {
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numLanes; col++) {
+                    const road = createRoad(row * roadLength, col * laneWidth);
+                    roads.push(road);
+                    scene.add(road);
                 }
-            } else if (lane.type === "grass") {
-                // Draw grass
-                ctx.fillStyle = "green"; 
-                ctx.fillRect(0, lane.y, roadWidth, laneHeight);
-
-                // Draw flowers on the grass lane
-                drawFlowers(lane.y);
             }
         }
-    }
 
-    // Update the lanes' positions and reset their position when they go off-screen
-    function updateLanes() {
-        for (let i = 0; i < lanes.length; i++) {
-            const lane = lanes[i];
-            lane.y += scrollSpeed;
+        // Create a road segment
+        function createRoad(zPosition, xPosition) {
+            const roadGeometry = new THREE.PlaneGeometry(laneWidth, roadLength);
+            const roadMaterial = new THREE.MeshLambertMaterial({ color: 0x888888, side: THREE.DoubleSide });
+            const road = new THREE.Mesh(roadGeometry, roadMaterial);
+            road.position.set(xPosition, 0, zPosition);
+            road.rotation.x = -Math.PI / 2; 
+            return road;
+        }
 
-            // Once a lane goes off the screen, reset it to the top
-            if (lane.y >= canvas.height) {
-                lane.y = -laneHeight;  
-                lane.type = laneSequence[Math.floor(Math.random() * totalLanes)]; 
+        // Resize canvas on window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Update the positions of the roads to simulate movement
+        function updateRoads() {
+            for (let i = 0; i < roads.length; i++) {
+                const road = roads[i];
+                road.position.z += scrollSpeed;
+
+                // Recycle road when it moves off-screen
+                if (road.position.z > roadLength * numRows) {
+                    road.position.z = -roadLength * numRows;  
+                }
             }
         }
-    }
 
-    function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Animate the scene
+        function animate() {
+            requestAnimationFrame(animate);
 
-        // Update and draw lanes
-        updateLanes();
-        drawLanes();
+            // Update road positions to simulate infinite scrolling
+            updateRoads();
 
-        // Request the next frame
-        requestAnimationFrame(gameLoop);
-    }
+            // Render the scene (camera stays fixed)
+            renderer.render(scene, camera);
+        }
 
-    // Initialize the lanes and start the game loop
-    initializeLanes();
-    gameLoop();
-</script>
+        init();
+    </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
 
 
 
