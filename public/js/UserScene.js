@@ -14,15 +14,17 @@ export default class UserScene extends THREE.Scene{
 
         // Create a camera, which determines what we'll see when we render the scene
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.z = 6;
+        this.camera.position.z = 9;
         this.camera.position.y = 2;
 
+        // Add the orbit controls to the camera
         this.controls = new OrbitControls(this.camera, renderer.domElement);
         this.controls.enablePan = false;
         this.controls.enableZoom = false;
         this.controls.autoRotate = false;
         this.controls.update();
 
+        // Add the directional light to the scene
         const light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(1, 1, 1).normalize();
         light.castShadow = true;
@@ -36,13 +38,33 @@ export default class UserScene extends THREE.Scene{
         light.shadow.camera.right = 10;
         this.add(light);
 
+        // Add the ambient light to the scene
         var a = new THREE.AmbientLight(0x909090, 1);
         this.add(a);
 
-        this.user = new CustomUser();
-        this.add(this.user);
-
+        // Adding the surroundings
+        const surroundings = this.createSurroundings();
+        this.add(surroundings);
     }
     
+    /**
+     * This function creates the surroundings for the user scene
+     * 
+     * @returns {THREE.Group} the group containing the surroundings
+     */
+    createSurroundings() {
+        const group = new THREE.Group();
+
+        // Create the pedestal
+        const pedestalGeometry = new THREE.CylinderGeometry(2, 2, 0.5, 32);
+        const pedestalMaterial = new THREE.MeshPhongMaterial({color: 0x8B4513});
+        const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
+        pedestal.receiveShadow = true;
+        pedestal.castShadow = true;
+        pedestal.position.y = -3.25;
+        group.add(pedestal);
+
+        return group;
+    }
 
 }

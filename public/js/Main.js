@@ -13,8 +13,11 @@ document.body.appendChild(stats.dom);
 
 // Create a new UserScene
 const scene = new UserScene(renderer);
-var user = scene.user;
+var user = new CustomUser();
 var customUser = user;
+
+scene.add(user);
+
 
 // Add the scene to the document
 function animate() {
@@ -30,13 +33,16 @@ function animate() {
 }
 animate();
 
-// Resize the renderer when the window is resized
+/**
+ * This function resizes the renderer when the window is resized
+ */
 window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     scene.camera.aspect = window.innerWidth / window.innerHeight;
     scene.camera.updateProjectionMatrix();
 });
 
+// Get the elements from the HTML
 const colorPickerBody = document.getElementById("colorPickerBody");
 const colorPickerHead = document.getElementById("colorPickerHead");
 const texturePickerBody = document.getElementById("texturePickerBody");
@@ -47,6 +53,7 @@ const emissiveButtonHead = document.getElementById("emessiveHead");
 const emissiveButtonBody = document.getElementById("emessiveBody");
 const presetSelector = document.getElementById("presetSelector");
 
+// These are the default values for the user
 var curColorBody = 0xff0000;
 var curColorHead = 0xff0000;
 var shinynessHead = 0;
@@ -54,6 +61,9 @@ var shinynessBody = 0;
 var emissiveHead = false;
 var emissiveBody = false;
 
+/**
+ * This function changes the preset of the user based on what the user selects
+ */
 presetSelector.addEventListener("change", function() {
     var preset = this.value;
     switch (preset) {
@@ -66,7 +76,7 @@ presetSelector.addEventListener("change", function() {
         case "none":
             document.getElementById("noPresets").style.display = "flex";
             scene.remove(user);
-            user = customUser   ;
+            user = customUser;
             scene.add(user);
         break;
         case "nachos":
@@ -78,6 +88,9 @@ presetSelector.addEventListener("change", function() {
     }
 });
 
+/**
+ * This function changes the color of the head based on what the user selects
+ */
 emissiveButtonHead.addEventListener("click", function() {
     emissiveHead = !emissiveHead;
     if (emissiveHead) {
@@ -89,6 +102,9 @@ emissiveButtonHead.addEventListener("click", function() {
     }
 });
 
+/**
+ * This function changes the color of the head based on what the user selects
+*/
 emissiveButtonBody.addEventListener("click", function() {
     emissiveBody = !emissiveBody;
     if (emissiveBody) {
@@ -100,6 +116,9 @@ emissiveButtonBody.addEventListener("click", function() {
     }
 });
 
+/**
+ * This function changes the color of the body based on what the user selects
+ */
 colorPickerBody.addEventListener("change", function() {
     curColorBody = this.value;
     user.bodySetMaterial(curColorBody);
@@ -108,6 +127,9 @@ colorPickerBody.addEventListener("change", function() {
     }
 });
 
+/**
+ * This function changes the color of the head based on what the user selects
+ */
 colorPickerHead.addEventListener("change", function() {
     curColorHead = this.value;
     user.headSetMaterial(curColorHead);
@@ -116,16 +138,25 @@ colorPickerHead.addEventListener("change", function() {
     }
 });
 
+/**
+ * This function changes the shinyness of the head based on what the user selects
+ */
 shinySliderHead.addEventListener("change", function() {
     shinynessHead = this.value;
     user.headMesh.material.shininess = shinynessHead;
 });
 
+/**
+ * This function changes the shinyness of the body based on what the user selects
+ */
 shinySliderBody.addEventListener("change", function() {
     shinynessBody = this.value;
     user.bodyMesh.material.shininess = shinynessBody;
 });
 
+/**
+ * This function changes the texture of the body based on what the user selects
+ */
 texturePickerBody.addEventListener("change", function() {
     const selectedTexture = this.value;
     switch (selectedTexture) {
@@ -165,6 +196,9 @@ texturePickerBody.addEventListener("change", function() {
     }
 });
 
+/**
+ * This function changes the texture of the head based on what the user selects
+ */
 texturePickerHead.addEventListener("change", function() {
     const selectedTexture = this.value;
     switch (selectedTexture) {
