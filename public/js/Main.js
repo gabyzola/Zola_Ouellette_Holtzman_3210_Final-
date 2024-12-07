@@ -7,29 +7,31 @@ const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 
+//clock for delta time 
 const clock = new THREE.Clock();
 
+//keep track of which scene we are currently in 
 let hasSwitched = false;
 
 // Create a new UserScene
 let scene = new UserScene(renderer);
 
+//create scene with objects for testing 
 let objScene =  new ObjectViewerScene(renderer);
 
+//user
 let user;
-let farest = 0;
-let jumpSize = 30;
+
+//variables used in controlling movement 
+let farest = 0; //farest we have gone so far 
+let jumpSize = 30; //size of each "jump" of the player 
+
 
 // hold objects to update, all object MUST have an update function 
 let objToUpdate = [];
 
-/*
-let testObj = new Exhaust();
-scene.add(testObj);
-testObj.start();
-objToUpdate.push(testObj);
-*/
-
+//create cars
+//@NOTE we will need to replace this with an object pool I just wanted to check logic 
 for (let i = 0; i < 50; i++) {
     let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
@@ -39,18 +41,22 @@ for (let i = 0; i < 50; i++) {
     objToUpdate.push(car);
 }
 
-
+//last car head light we enabled 
 let lastSpotLight = new THREE.SpotLight();
 
 // Add the scene to the document
 function animate() {
     requestAnimationFrame(animate);
+    renderer.render(scene, scene.camera);
+
+    //check if we have switched scenes 
     if (!hasSwitched) {
         scene.controls.update();
     }
-    renderer.render(scene, scene.camera);
-    
+
+    //update each of our objects by delta 
     let delta = clock.getDelta();
+
     for (let obj of objToUpdate) {
         obj.update(delta);
 
@@ -59,16 +65,20 @@ function animate() {
                 return;
             }
 
+            //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
+            //this keeps the number of lights casting shadows low 
            if (obj.position.x - user.position.x === 0 && obj.spotLight.id != lastSpotLight.id) {
-            console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
+                console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
 
-            lastSpotLight.castShadow = false;
-            obj.spotLight.castShadow = true;
+                lastSpotLight.castShadow = false;
+                obj.spotLight.castShadow = true;
 
-            lastSpotLight = obj.spotLight;
+                lastSpotLight = obj.spotLight;
             }
         }
     }
+
+
 }
 animate();
 
@@ -92,6 +102,7 @@ colorPickerHead.addEventListener("change", function() {
 // Add a keyboard short cuts
 document.addEventListener("keydown", function(e) {
     switch (e.key) {
+        //move forwards 
         case "w":
         case "ArrowUp":
             if (!hasSwitched) {
@@ -99,13 +110,15 @@ document.addEventListener("keydown", function(e) {
             }
 
             user.translateX(-jumpSize); 
-
+            
+            //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
                 objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
             }
 
             break;
+        //move backwards
         case "s":
         case "ArrowDown":
             if (!hasSwitched) {
@@ -114,7 +127,8 @@ document.addEventListener("keydown", function(e) {
 
             user.translateX(jumpSize);
             break;
-
+        
+        //switch scenes - note we will probably replace this key with a button later
         case "Enter": 
             if (hasSwitched) {
                 return;
@@ -124,13 +138,13 @@ document.addEventListener("keydown", function(e) {
 
             // Hide CSS elements
             document.getElementById("container").style.display = "none";
+            //set user
             user = scene.user;
-
+            //switch scene 
             scene = objScene;
-
-            //switch scene
-            //below is my scene to test objects created 
+            
             user.translateZ(-20);
+            //add user to new scene 
             objScene.add(user);
 
             hasSwitched = true;
