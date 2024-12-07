@@ -123,8 +123,6 @@ export default class Car extends THREE.Group {
 
         this.spotLight = new THREE.SpotLight( 0xffa530, 10000, 150, Math.PI/5);
         this.spotLight.position.set(0, headLightLeftMesh.position.y - 2, headLightLeftMesh.position.z - 0.75);
-        //game breaks when spotlights cast a shadow 
-        this.spotLight.castShadow = true;
 
         //create target, note may need to change this 
         let target = new THREE.Object3D;
@@ -151,5 +149,6 @@ export default class Car extends THREE.Group {
             wheel.rotateY(Math.PI/2 * deltaTime);
         }
         this.translateZ(-5 * deltaTime);
+
     }
 }

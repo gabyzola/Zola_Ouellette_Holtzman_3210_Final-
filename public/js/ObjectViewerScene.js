@@ -29,7 +29,7 @@ export default class UserScene extends THREE.Scene{
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-        const geometry = new THREE.PlaneGeometry( 1000, 1000 );
+        const geometry = new THREE.PlaneGeometry( 100000, 1000 );
         const material = new THREE.MeshPhongMaterial( {color: 0x808071, side: THREE.DoubleSide} );
         const plane = new THREE.Mesh( geometry, material );
 

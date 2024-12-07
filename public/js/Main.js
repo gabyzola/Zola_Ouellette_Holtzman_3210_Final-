@@ -30,7 +30,7 @@ testObj.start();
 objToUpdate.push(testObj);
 */
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 50; i++) {
     let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
     car.position.x = -i * jumpSize;
@@ -39,6 +39,8 @@ for (let i = 0; i < 10; i++) {
     objToUpdate.push(car);
 }
 
+
+let lastSpotLight = new THREE.SpotLight();
 
 // Add the scene to the document
 function animate() {
@@ -56,11 +58,15 @@ function animate() {
             if (!hasSwitched) {
                 return;
             }
-            /**logic isnt working below  
-            if (obj.boundingBox.intersectsBox(user.boundingBox)) {
-                console.warn("Car hit player!");
+
+           if (obj.position.x - user.position.x === 0 && obj.spotLight.id != lastSpotLight.id) {
+            console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
+
+            lastSpotLight.castShadow = false;
+            obj.spotLight.castShadow = true;
+
+            lastSpotLight = obj.spotLight;
             }
-            */
         }
     }
 }
