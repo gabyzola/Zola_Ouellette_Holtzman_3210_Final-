@@ -1,7 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import CustomUser from './CustomUser.js';
-import Oracle from './Oracle.js';
 
 export default class UserScene extends THREE.Scene{
     /**
@@ -16,13 +13,7 @@ export default class UserScene extends THREE.Scene{
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.z = 16;
         this.camera.position.y = 4;
-
-        // Add the orbit controls to the camera
-        this.controls = new OrbitControls(this.camera, renderer.domElement);
-        this.controls.enablePan = false;
-        this.controls.enableZoom = false;
-        this.controls.autoRotate = false;
-        this.controls.update();
+        this.camera.lookAt(0, -2, 0);
 
         // Add the directional light to the scene
         const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -54,15 +45,27 @@ export default class UserScene extends THREE.Scene{
      */
     createSurroundings() {
         const group = new THREE.Group();
+        const loader = new THREE.TextureLoader();
 
         // Create the pedestal
         const pedestalGeometry = new THREE.CylinderGeometry(4, 4, 1, 32);
-        const pedestalMaterial = new THREE.MeshPhongMaterial({color: 0x8B4513});
+        const pedestalMaterial = new THREE.MeshPhongMaterial({ map: loader.load('./public/texture/MarbleTexture.png') });
         const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
+        pedestal.material.shininess = 1000;
         pedestal.receiveShadow = true;
         pedestal.castShadow = true;
         pedestal.position.y = -6.5;
         group.add(pedestal);
+        console.log(pedestal);
+
+        // Create the ground around the pedestal
+        const groundGeometry = new THREE.PlaneGeometry(100, 100);
+        const groundMaterial = new THREE.MeshPhongMaterial({ map: loader.load('./public/texture/WoodTexture.png') });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.receiveShadow = true;
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -7;
+        group.add(ground);
 
         return group;
     }

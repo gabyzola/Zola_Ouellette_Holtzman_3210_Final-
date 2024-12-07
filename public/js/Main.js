@@ -18,20 +18,38 @@ var customUser = user;
 
 scene.add(user);
 
+var rotate = false;
 
 // Add the scene to the document
 function animate() {
     stats.begin();
 
     requestAnimationFrame(animate);
-    scene.controls.update();
     renderer.render(scene, scene.camera);
     if (user instanceof CustomUser) {
         customUser = user;
     }
+    if (rotate) {
+        rotateAboutWorldAxis(scene.camera, new THREE.Vector3(0, 1, 0), Math.PI / 540);
+        scene.camera.lookAt(0, -2, 0);
+    }
+
+
+
     stats.end();
 }
 animate();
+
+// rotates the camera around the scene
+function rotateAboutWorldAxis(object, axis, angle) {
+    var rotationMatrix = new THREE.Matrix4() ;
+    rotationMatrix.makeRotationAxis( axis.normalize() ,angle) ;
+    var currentPos = new THREE.Vector4(object.position.x, object.position.y, object.position.z, 1) ;
+    var newPos = currentPos.applyMatrix4( rotationMatrix );
+    object.position.x = newPos.x ;
+    object.position.y = newPos.y ;
+    object.position.z = newPos.z ;
+}
 
 /**
  * This function resizes the renderer when the window is resized
@@ -240,8 +258,6 @@ texturePickerHead.addEventListener("change", function() {
 document.addEventListener("keydown", function(e) {
     switch (e.key) {
         case 'r':
-            if (scene instanceof UserScene) {
-                scene.controls.autoRotate = !scene.controls.autoRotate;
-            }
+            rotate = !rotate;
     }
 });
