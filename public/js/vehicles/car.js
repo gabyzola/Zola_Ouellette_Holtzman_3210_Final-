@@ -108,43 +108,34 @@ export default class Car extends THREE.Group {
 
         this.add(headLightLeftMesh);
 
+        let headLightRightMesh = headLightLeftMesh.clone();
+        headLightRightMesh.translateX(6);
+
         //make bounding box before adding lights to avoid odd issues with helper meshes 
         this.boundingBox = new THREE.Box3().setFromObject(this);
 
         const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
         this.add(boxHelper);
 
-        this.spotLightLeft = new THREE.SpotLight( 0xa902eb, 10000, 75, Math.PI/8);
-        this.spotLightLeft.position.set(headLightLeftMesh.position.x, headLightLeftMesh.position.y, headLightLeftMesh.position.z - 0.75);
-        this.spotLightLeft.castShadow = true;
+
+        this.add(headLightRightMesh);
+        this.translateY(2);
+
+        this.spotLight = new THREE.SpotLight( 0xffa530, 10000, 150, Math.PI/5);
+        this.spotLight.position.set(0, headLightLeftMesh.position.y - 2, headLightLeftMesh.position.z - 0.75);
+        //game breaks when spotlights cast a shadow 
+        this.spotLight.castShadow = true;
 
         //create target, note may need to change this 
         let target = new THREE.Object3D;
         target.position.z = -1000;
-        this.spotLightLeft.target = target;
+        this.spotLight.target = target;
 
-        this.add(this.spotLightLeft);
-        this.add(this.spotLightLeft.target);
+        this.add(this.spotLight);
+        this.add(this.spotLight.target);
 
-        let spotLightHelper = new THREE.SpotLightHelper( this.spotLightLeft );
+        let spotLightHelper = new THREE.SpotLightHelper( this.spotLight );
         this.add( spotLightHelper );
-
-
-        let headLightRightMesh = headLightLeftMesh.clone();
-        headLightRightMesh.translateX(6);
-
-        this.add(headLightRightMesh);
-
-        this.spotLightRight = this.spotLightLeft.clone();
-        this.spotLightRight.position.x = (this.spotLightLeft.position.x + 6);
-
-        this.add(this.spotLightRight);
-        this.add(this.spotLightRight.target);
-
-        let spotLightHelper2 = new THREE.SpotLightHelper( this.spotLightRight );
-        this.add( spotLightHelper2 );
-
-        this.translateY(2);
 
     }
 

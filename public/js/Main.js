@@ -5,6 +5,7 @@ import Car from './vehicles/car';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
 
 const clock = new THREE.Clock();
 
