@@ -2,10 +2,17 @@ import * as THREE from 'three';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
 import Car from './vehicles/car';
+import Stats from "three/examples/jsm/libs/stats.module.js";
+
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
+
+//stats for fps counter
+const stats = new Stats()
+//stats.showPanel(1) // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom)
 
 //clock for delta time 
 const clock = new THREE.Clock();
@@ -32,7 +39,7 @@ let objToUpdate = [];
 
 //create cars
 //@NOTE we will need to replace this with an object pool I just wanted to check logic 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 25; i++) {
     let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
     car.position.x = -i * jumpSize;
@@ -44,10 +51,35 @@ for (let i = 0; i < 50; i++) {
 //last car head light we enabled 
 let lastSpotLight = new THREE.SpotLight();
 
+function updateCar(obj) {
+    if (!hasSwitched) {
+        return;
+    }
+    //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
+    //this keeps the number of lights casting shadows low 
+
+   if ( obj.position.x - user.position.x === 0 ) {
+        //avoiding turning the same light on multiple times 
+        if (obj.spotLight.id != lastSpotLight.id) {
+            console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
+
+            lastSpotLight.castShadow = false;
+            obj.spotLight.castShadow = true;
+
+            lastSpotLight = obj.spotLight;
+        }
+        
+        //console.log(obj.isIntersecting(user.boundingBox))
+
+        if (obj.isIntersecting(user.boundingBox)) {
+            console.warn("car hit player")
+        }
+    }
+}
 // Add the scene to the document
 function animate() {
+    stats.begin();
     requestAnimationFrame(animate);
-    renderer.render(scene, scene.camera);
 
     //check if we have switched scenes 
     if (!hasSwitched) {
@@ -61,34 +93,15 @@ function animate() {
         obj.update(delta);
 
         if (obj.isCar) {
-            if (!hasSwitched) {
-                return;
-            }
-
-            //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
-            //this keeps the number of lights casting shadows low 
-           if (obj.position.x - user.position.x === 0 ) {
-                //avoiding turning the same light on multiple times 
-                if (obj.spotLight.id != lastSpotLight.id) {
-                    console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
-
-                    lastSpotLight.castShadow = false;
-                    obj.spotLight.castShadow = true;
-    
-                    lastSpotLight = obj.spotLight;
-                }
-                
-                //console.log(obj.isIntersecting(user.boundingBox))
-
-                if (obj.isIntersecting(user.boundingBox)) {
-                    console.warn("car hit player")
-                }
-            }
+            updateCar(obj);
         }
     }
 
+    renderer.render(scene, scene.camera);
 
+    stats.end();
 }
+
 animate();
 
 // Resize the renderer when the window is resized
