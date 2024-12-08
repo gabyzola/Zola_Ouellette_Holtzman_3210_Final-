@@ -1,17 +1,37 @@
 import * as THREE from 'three';
 import Exhaust from './exhaust';
 
-
+/**
+ * Car objects
+ * 
+ * @example
+ * let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
+ * scene.add(car)
+ * 
+ * //start particles effects
+ * car.start();
+ * 
+ * animate() {
+ *  //... animate code 
+ *  car.update(delta);
+ * }
+ */
 export default class Car extends THREE.Group {
-    constructor() {
+    constructor(color) {
         super();
+        //set car speed
+        this.carSpeed = THREE.MathUtils.randFloat(-15,-5);
+
+        const loadManager = new THREE.LoadingManager () ;
+        const loader = new THREE.TextureLoader( loadManager );
+        this.isCar = true;
         //create car body
-        let texture = new THREE.TextureLoader().load("public/textures/Metal055A_1K-PNG_Color.png");
-        let metalMap = new THREE.TextureLoader().load("public/textures/Metal055A_1K-PNG_Metalness.png");
+        let texture = loader.load("public/textures/Metal055A_1K-PNG_Color.png");
+        let metalMap = loader.load("public/textures/Metal055A_1K-PNG_Metalness.png");
 
         let body = new THREE.BoxGeometry(12, 7, 20);
-        let carMat = new THREE.MeshPhongMaterial({ 
-            color: 0x08080, reflectivity: 10, shininess: 10, map: texture, bumpMap: metalMap
+        let carMat = new THREE.MeshToonMaterial({ 
+            color: color, map: texture, bumpMap: metalMap
         });
         this.bodyMesh = new THREE.Mesh(body, carMat);
 
@@ -21,12 +41,19 @@ export default class Car extends THREE.Group {
         this.add(this.bodyMesh);
         
         //create cab
-        let cab = new THREE.CapsuleGeometry( 5, 6, 8, 8 ); 
-        let cabText = new THREE.TextureLoader().load("public/textures/Metal032_1K-PNG_Color.png");
-        let metalCabMap = new THREE.TextureLoader().load("public/textures/Metal032_1K-PNG_Metalness.png");
+        let cab;
+        if (Math.random() > 0.5) {
+            cab = new THREE.CapsuleGeometry( 5, 6, 8, 8 ); 
+        }
+        else {
+            cab = new THREE.BoxGeometry(11,12,7);
+        }
 
-        let cabMat = new THREE.MeshPhongMaterial({ 
-            color: 0xFFFFFF, reflectivity: 25, shininess: 100, map: cabText, bumpMap: metalCabMap
+        let cabText = loader.load("public/textures/Metal032_1K-PNG_Color.png");
+        let metalCabMap = loader.load("public/textures/Metal032_1K-PNG_Metalness.png");
+
+        let cabMat = new THREE.MeshToonMaterial({ 
+            color: 0xFFFFFF,  map: cabText, bumpMap: metalCabMap
         });
         
         this.cabMesh = new THREE.Mesh(cab, cabMat);
@@ -49,10 +76,10 @@ export default class Car extends THREE.Group {
         this.wheels = [];
 
         let wheel = new THREE.CylinderGeometry( 3, 3, 3, 32 ); 
-        let wheelTexture = new THREE.TextureLoader().load("public/textures/Rubber004_1K-JPG_Color.jpg");
-        let displacementTexture = new THREE.TextureLoader().load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
+        let wheelTexture = loader.load("public/textures/Rubber004_1K-JPG_Color.jpg");
+        let displacementTexture = loader.load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
 
-        let wheelMat = new THREE.MeshPhongMaterial({
+        let wheelMat = new THREE.MeshToonMaterial({
             color: 0x97a18d, map: wheelTexture, bumpMap: displacementTexture
         })
 
@@ -98,43 +125,46 @@ export default class Car extends THREE.Group {
 
         this.add(headLightLeftMesh);
 
-        this.spotLightLeft = new THREE.SpotLight( 0xfcd268, 10000);
-        this.spotLightLeft.position.set(headLightLeftMesh.position.x, headLightLeftMesh.position.y, headLightLeftMesh.position.z);
-        this.spotLightLeft.castShadow = true;
+        let headLightRightMesh = headLightLeftMesh.clone();
+        headLightRightMesh.translateX(6);
+
+        //make bounding box before adding lights to avoid odd issues with helper meshes 
+        this.boundingBox = new THREE.Box3().setFromObject(this);
+
+        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
+        this.add(boxHelper);
+
+
+        this.add(headLightRightMesh);
+        this.translateY(2);
+
+        this.spotLight = new THREE.SpotLight( 0xffa530, 10000, 150, Math.PI/5);
+        this.spotLight.position.set(0, headLightLeftMesh.position.y - 2, headLightLeftMesh.position.z - 0.75);
 
         //create target, note may need to change this 
         let target = new THREE.Object3D;
         target.position.z = -1000;
-        this.spotLightLeft.target = target;
+        this.spotLight.target = target;
 
-        this.add(this.spotLightLeft);
-        this.add(this.spotLightLeft.target);
+        this.add(this.spotLight);
+        this.add(this.spotLight.target);
 
-        let spotLightHelper = new THREE.SpotLightHelper( this.spotLightLeft );
-        this.add( spotLightHelper );
+        //let spotLightHelper = new THREE.SpotLightHelper( this.spotLight );
+        //this.add( spotLightHelper );
 
-
-        let headLightRightMesh = headLightLeftMesh.clone();
-        headLightRightMesh.translateX(6);
-
-        this.add(headLightRightMesh);
-
-        this.spotLightRight = this.spotLightLeft.clone();
-        this.spotLightRight.position.x = (this.spotLightLeft.position.x + 6);
-
-        this.add(this.spotLightRight);
-        this.add(this.spotLightRight.target);
-
-        let spotLightHelper2 = new THREE.SpotLightHelper( this.spotLightRight );
-        this.add( spotLightHelper2 );
-
-        this.translateY(2);
     }
 
+    /**
+     * Start particle effects of exhaust
+     */
     start() {
         this.exhaust.start();
     }
 
+    /**
+     * Update car - Moves forward, rotate wheels and update exhaust particles 
+     * @param {Int} deltaTime Time since last animation frame to update object
+     */
     update(deltaTime) {
         //update exhaust 
         this.exhaust.update(deltaTime)
@@ -142,6 +172,17 @@ export default class Car extends THREE.Group {
         for (let wheel of this.wheels) {
             wheel.rotateY(Math.PI/2 * deltaTime);
         }
-        //this.translateZ(-3 * deltaTime);
+        //move forward
+        this.translateZ( this.carSpeed * deltaTime );
+
+    }
+
+    /**
+     * Check if a bounding box intersect's this car's bounding box 
+     * @param {THREE.Box3} targetBoundingBox 
+     * @returns true if intersecting false otherwise
+     */
+    isIntersecting(targetBoundingBox) {
+        return this.boundingBox.intersectsBox(targetBoundingBox);
     }
 }
