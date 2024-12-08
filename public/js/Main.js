@@ -50,7 +50,7 @@ for (let i = 0; i < 25; i++) {
     let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
     car.position.x = -i * jumpSize;
-    car.position.z = THREE.MathUtils.randFloat(0, 100);
+    car.position.z = THREE.MathUtils.randFloat(50, 150);
     car.start();
     objToUpdate.push(car);
 }
