@@ -1,127 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Horizontal Roads</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crossy Road Scene</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        let scene, camera, renderer;
-        const roads = [];
-        const laneWidth = 20;  
-        const roadLength = 200; 
-        const numRows = 4; 
-        const numLanes = 10; 
-        const scrollSpeed = 0.2; 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+<script>
+  // Scene, Camera, and Renderer
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-        // Initialize the scene, camera, and renderer
-        function init() {
-            scene = new THREE.Scene();
+  // Camera position
+  camera.position.set(0, 10, 100);
+  camera.lookAt(0, 0, 0); 
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 10, 100); 
-            camera.lookAt(0, 10, 0); 
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
 
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight.position.set(100, 200, 100);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
 
-            // ambient light to illuminate the scene
-            const light = new THREE.AmbientLight(0x888888);
-            scene.add(light);
+  const laneWidth = 20; 
+  const numLanes = 10; 
 
-            // Add a directional light to help illuminate the scene and cast shadows
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-            dirLight.position.set(0, 10, 10).normalize();
-            scene.add(dirLight);
+  // Calculate lane depth to fill screen width
+  function getLaneDepth() {
+    const frustumHeight = 2 * Math.tan((camera.fov * Math.PI) / 360) * Math.abs(camera.position.z - 0);
+    const frustumWidth = frustumHeight * camera.aspect;
+    return frustumWidth;
+  }
 
-            // the rows of roads and add them to the scene
-            createInitialRoads();
+  // Materials
+  const roadMaterial = new THREE.MeshPhongMaterial({ color: 0x333333 });
+  const grassMaterial = new THREE.MeshPhongMaterial({ color: 0x4caf50 });
 
-            window.addEventListener('resize', onWindowResize, false);
+  // Create a lane (either road or grass)
+  function createLane(type, yPosition, laneDepth) {
+    const material = type === 'road' ? roadMaterial : grassMaterial;
+    const geometry = new THREE.BoxGeometry(laneDepth, laneWidth, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(0, yPosition, 0);
+    mesh.receiveShadow = true;
+    return mesh;
+  }
 
-            animate();
-        }
+  // Generate lanes
+  function generateLanes() {
+    const laneDepth = getLaneDepth();
+    let yPosition = 0; 
+    for (let i = 0; i < numLanes; i++) {
+      const type = i % 2 === 0 ? 'road' : 'grass'; 
+      const lane = createLane(type, yPosition, laneDepth);
+      scene.add(lane);
+      yPosition -= laneWidth; 
+    }
+  }
 
-        // Create initial roads immediately in front of the camera
-        function createInitialRoads() {
-            for (let row = 0; row < numRows; row++) {
-                for (let col = 0; col < numLanes; col++) {
-                    const road = createRoad(row * roadLength, col * laneWidth);
-                    roads.push(road);
-                    scene.add(road);
-                }
-            }
-        }
+  generateLanes();
 
-        // Create a road segment
-        function createRoad(zPosition, xPosition) {
-            const roadGeometry = new THREE.PlaneGeometry(laneWidth, roadLength);
-            const roadMaterial = new THREE.MeshLambertMaterial({ color: 0x888888, side: THREE.DoubleSide });
-            const road = new THREE.Mesh(roadGeometry, roadMaterial);
-            road.position.set(xPosition, 0, zPosition);
-            road.rotation.x = -Math.PI / 2; 
-            return road;
-        }
+  // Render loop
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
 
-        // Resize canvas on window resize
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+  animate();
 
-        // Update the positions of the roads to simulate movement
-        function updateRoads() {
-            for (let i = 0; i < roads.length; i++) {
-                const road = roads[i];
-                road.position.z += scrollSpeed;
+  // Handle window resizing
+  window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
-                // Recycle road when it moves off-screen
-                if (road.position.z > roadLength * numRows) {
-                    road.position.z = -roadLength * numRows;  
-                }
-            }
-        }
-
-        // Animate the scene
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Update road positions to simulate infinite scrolling
-            updateRoads();
-
-            // Render the scene (camera stays fixed)
-            renderer.render(scene, camera);
-        }
-
-        init();
-    </script>
+    // Regenerate lanes to fit screen
+    scene.clear();
+    scene.add(ambientLight);
+    scene.add(directionalLight);
+    generateLanes();
+  });
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
