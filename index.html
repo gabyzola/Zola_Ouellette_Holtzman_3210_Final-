@@ -7,29 +7,85 @@
     <link rel="stylesheet" href="/public/styles/style.css">
 </head>
 <body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.138.0/build/three.module.js"
+            }
+        }
+    </script>
     <div id="container">
-        <ul>
-            <li id="colorPickerBodyLI">
-                <label for="colorPickerBody">Color for Body</label>
-                <input type="color" id="colorPickerBody" value="#ff0000">
-            </li>
-            <li id="colorPickerHeadLI">
-                <label for="colorPickerBody">Color for Head</label>
-                <input type="color" id="colorPickerHead" value="#ff0000">
-            </li>
-            <li id="texturePickerHeadLI">
-                <label for="texturePickerHead">Texture for Head</label>
-                <select name="texturePickerHead" id="texturePickerHead">
-                    <option value="none">none</option>
-                </select>
-            </li>
-            <li id="texturePickerBodyLI">
-                <label for="texturePickerBody">Texture for Body</label>
-                <select name="texturePickerBody" id="texturePickerBody">
-                    <option value="none">none</option>
-                </select> 
-            </li>
-        </ul>
+        <div id="noPresets">
+            <ul>
+                <li id="colorPickerBodyLI">
+                    <!-- This is the color picker for the body -->
+                    <label for="colorPickerBody">Color for Body</label>
+                    <input type="color" id="colorPickerBody" value="#ff0000">
+                </li>
+                <li id="colorPickerHeadLI">
+                    <!-- This is the color picker for the head -->
+                    <label for="colorPickerBody">Color for Head</label>
+                    <input type="color" id="colorPickerHead" value="#ff0000">
+                </li>
+                <li id="texturePickerHeadLI">
+                    <!-- This is the selector for the head textures -->
+                    <label for="texturePickerHead">Texture for Head</label>
+                    <select name="texturePickerHead" id="texturePickerHead">
+                        <option value="none">none</option>
+                        <option value="gold">Gold</option>
+                        <option value="fabric">Fabric</option>
+                        <option value="metal">Metal</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="wood">Wood</option>
+                    </select>
+                </li>
+                <li id="texturePickerBodyLI">
+                    <!-- This is the selector for the body textures -->
+                    <label for="texturePickerBody">Texture for Body</label>
+                    <select name="texturePickerBody" id="texturePickerBody">
+                        <option value="none">none</option>
+                        <option value="gold">Gold</option>
+                        <option value="fabric">Fabric</option>
+                        <option value="metal">Metal</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="wood">Wood</option>
+                    </select> 
+                </li>
+                <li id="shinySliderHeadLI">
+                    <!-- This is going to be the slider for the head to be shiny -->
+                    <label for="shinySliderHead">Shiny Head Slider</label>
+                    <input type="range" min="0" max="1000" value="0" class="slider" id="shinySliderHead">
+                </li>
+                <li id="shinySliderBodyLI">
+                    <!-- This is going to be the slider for the body to be shiny -->
+                    <label for="shinySliderBody">Shiny Body Slider</label>
+                    <input type="range" min="0" max="1000" value="0" class="slider" id="shinySliderBody">
+                </li>
+                <li id="emissiveButtonHeadLI">
+                    <!-- Button to make the head emissive -->
+                    <button id="emessiveHead">Make Head Emissive</button>
+                </li>
+                <li id="emissiveButtonBodyLI">
+                    <!-- Button to make the body emissive -->
+                    <button id="emessiveBody">Make Body Emissive</button>
+                </li>
+            </ul>
+        </div>
+        <div id="preset">
+            <ul>
+                <li id="presetSelectorLI">
+                    <!-- This is the selector for the character presets -->
+                    <label for="presetSelector">Select a Preset</label>
+                    <select name="presetSelector" id="presetSelector">
+                        <option value="none">Custom</option>
+                        <option value="oracle">Oracle</option>
+                        <option value="nachos">Nachos</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+        <!-- This is the start play button -->
+        <button id="play">Play</button>
     </div>
     <canvas id="myCanvas"></canvas>
     <script type="module" src="/public/js/Main.js"></script>
