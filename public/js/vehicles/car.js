@@ -30,8 +30,8 @@ export default class Car extends THREE.Group {
         let metalMap = loader.load("public/textures/Metal055A_1K-PNG_Metalness.png");
 
         let body = new THREE.BoxGeometry(12, 7, 20);
-        let carMat = new THREE.MeshPhongMaterial({ 
-            color: color, reflectivity: 10, shininess: 10, map: texture, bumpMap: metalMap
+        let carMat = new THREE.MeshToonMaterial({ 
+            color: color, map: texture, bumpMap: metalMap
         });
         this.bodyMesh = new THREE.Mesh(body, carMat);
 
@@ -52,8 +52,8 @@ export default class Car extends THREE.Group {
         let cabText = loader.load("public/textures/Metal032_1K-PNG_Color.png");
         let metalCabMap = loader.load("public/textures/Metal032_1K-PNG_Metalness.png");
 
-        let cabMat = new THREE.MeshPhongMaterial({ 
-            color: 0xFFFFFF, reflectivity: 25, shininess: 100, map: cabText, bumpMap: metalCabMap
+        let cabMat = new THREE.MeshToonMaterial({ 
+            color: 0xFFFFFF,  map: cabText, bumpMap: metalCabMap
         });
         
         this.cabMesh = new THREE.Mesh(cab, cabMat);
@@ -79,7 +79,7 @@ export default class Car extends THREE.Group {
         let wheelTexture = loader.load("public/textures/Rubber004_1K-JPG_Color.jpg");
         let displacementTexture = loader.load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
 
-        let wheelMat = new THREE.MeshPhongMaterial({
+        let wheelMat = new THREE.MeshToonMaterial({
             color: 0x97a18d, map: wheelTexture, bumpMap: displacementTexture
         })
 
@@ -149,8 +149,8 @@ export default class Car extends THREE.Group {
         this.add(this.spotLight);
         this.add(this.spotLight.target);
 
-        let spotLightHelper = new THREE.SpotLightHelper( this.spotLight );
-        this.add( spotLightHelper );
+        //let spotLightHelper = new THREE.SpotLightHelper( this.spotLight );
+        //this.add( spotLightHelper );
 
     }
 
