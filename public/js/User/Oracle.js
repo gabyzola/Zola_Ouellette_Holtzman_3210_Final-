@@ -18,7 +18,7 @@ export default class Oracle extends User {
      */
     createHead() {
         // Create the head
-        const texture1 = new THREE.TextureLoader().load('./public/texture/Oracle.png');
+        const texture1 = new THREE.TextureLoader().load('/texture/Oracle.png');
         const geometry1 = new THREE.CylinderGeometry(1.6, 1.6, 3.2, 32);
         const material1 = [];
         material1.push(new THREE.MeshPhongMaterial({ color: 0xffe2c6 }));
@@ -33,7 +33,7 @@ export default class Oracle extends User {
         mesh1.receiveShadow = true;
 
         // Create the hat
-        const texture2 = new THREE.TextureLoader().load('./public/texture/WizardHat.png');
+        const texture2 = new THREE.TextureLoader().load('/texture/WizardHat.png');
         const geometry2 = new THREE.ConeGeometry(2.5, 6, 32);
         const material2 = [];
         material2.push(new THREE.MeshPhongMaterial({ map: texture2 }));

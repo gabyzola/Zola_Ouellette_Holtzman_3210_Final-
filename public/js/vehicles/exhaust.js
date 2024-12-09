@@ -4,8 +4,8 @@ export default class Exhaust extends THREE.Group {
     constructor() {
         super();
 
-        let texture = new THREE.TextureLoader().load("public/textures/Metal053C_1K-PNG_Color.png");
-        let metalMap = new THREE.TextureLoader().load("public/textures/Metal053C_1K-PNG_Metalness.png")
+        let texture = new THREE.TextureLoader().load("/textures/Metal053C_1K-PNG_Color.png");
+        let metalMap = new THREE.TextureLoader().load("/textures/Metal053C_1K-PNG_Metalness.png")
         
         //add exhaust body
         this.body = new THREE.CylinderGeometry(0.5, 1, 4, 32);
