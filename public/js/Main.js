@@ -4,7 +4,7 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 
 import Oracle from './User/Oracle.js';
 import CustomUser from './CustomUser.js';
-import Nachos from './Nachos.js';
+import Nachos from './User/Nachos.js';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
 import Car from './vehicles/car';
