@@ -58,12 +58,14 @@ for (let i = 0; i < 25; i++) {
 //last car head light we enabled 
 let lastSpotLight = new THREE.SpotLight();
 
-function updateCar(obj) {
+function updateCar(obj, delta) {
     if (!hasSwitched) {
         return;
     }
     //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
     //this keeps the number of lights casting shadows low 
+
+    obj.update(delta);
 
    if ( obj.position.x - user.position.x === 0 ) {
         //avoiding turning the same light on multiple times 
@@ -94,6 +96,11 @@ function animate() {
         if (user instanceof CustomUser) {
             customUser = user;
         }
+
+        if (rotate) {
+            rotateAboutWorldAxis(scene.camera, new THREE.Vector3(0,1,0), Math.PI / 520);
+            scene.camera.lookAt(0,-2,0)
+        }
     }
 
 
@@ -101,17 +108,13 @@ function animate() {
     let delta = clock.getDelta();
 
     for (let obj of objToUpdate) {
-        obj.update(delta);
 
         if (obj.isCar) {
-            updateCar(obj);
+            updateCar(obj, delta );
         }
     }
 
-    if (rotate) {
-        rotateAboutWorldAxis(scene.camera, new THREE.Vector3(0,1,0), Math.PI / 520);
-        scene.camera.lookAt(0,-2,0)
-    }
+    
 
     renderer.render(scene, scene.camera);    
 
