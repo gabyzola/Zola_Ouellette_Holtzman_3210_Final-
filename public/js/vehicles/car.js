@@ -175,6 +175,8 @@ export default class Car extends THREE.Group {
         //move forward
         this.translateZ( this.carSpeed * deltaTime );
 
+        this.boundingBox = new THREE.Box3().setFromObject(this);
+
     }
 
     /**

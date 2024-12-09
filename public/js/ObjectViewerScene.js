@@ -14,7 +14,7 @@ export default class ObjectViewerScene extends THREE.Scene{
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 300);
 
         this.camera.position.z = -20; //move camera right 
-        this.camera.position.x = 35; 
+        this.camera.position.x = 55; 
         this.camera.position.y = 25; //move up
 
         this.camera.rotateY(Math.PI/2);

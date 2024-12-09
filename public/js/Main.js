@@ -32,6 +32,7 @@ var customUser = user;
 scene.add(user);
 
 var rotate = false;
+var hasCrashed = false;
 
 //create scene with objects for testing 
 let objScene =  new ObjectViewerScene(renderer);
@@ -68,9 +69,11 @@ function updateCar(obj, delta) {
     obj.update(delta);
 
    if ( obj.position.x - user.position.x === 0 ) {
+
+        user.setBoundingBox();
+
         //avoiding turning the same light on multiple times 
         if (obj.spotLight.id != lastSpotLight.id) {
-            console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
 
             lastSpotLight.castShadow = false;
             obj.spotLight.castShadow = true;
@@ -80,8 +83,9 @@ function updateCar(obj, delta) {
         
         //console.log(obj.isIntersecting(user.boundingBox))
 
-        if (obj.isIntersecting(user.boundingBox)) {
+        if (obj.isIntersecting(user.boundingBox) && !hasCrashed) {
             console.warn("car hit player")
+            hasCrashed = true;
         }
     }
 }
