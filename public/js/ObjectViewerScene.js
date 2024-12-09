@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import Lane from './Lane.js';
 
-export default class UserScene extends THREE.Scene {
+
+export default class ObjectViewerScene extends THREE.Scene{
+
     /**
      * This is the scene for the user selections and being able to access the user afters
      * 
@@ -15,7 +17,9 @@ export default class UserScene extends THREE.Scene {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 300);
 
         this.camera.position.z = -20; //move camera right 
-        this.camera.position.x = 35;
+
+        this.camera.position.x = 55; 
+      
         this.camera.position.y = 25; //move up
 
         this.camera.rotateY(Math.PI / 2);

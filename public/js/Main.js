@@ -8,6 +8,7 @@ import Nachos from './Nachos.js';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
 import Car from './vehicles/car';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -27,11 +28,18 @@ let hasSwitched = false;
 // Create a new UserScene
 let scene = new UserScene(renderer);
 var user = new CustomUser();
+
+var userControls = new OrbitControls(scene.camera, renderer.domElement);
+userControls.maxPolarAngle = Math.PI * 1.25 / 2;
+userControls.autoRotate = false;
+userControls.autoRotateSpeed = Math.PI;
+
 var customUser = user;
 
 scene.add(user);
 
 var rotate = false;
+var hasCrashed = false;
 
 //create scene with objects for testing 
 let objScene =  new ObjectViewerScene(renderer);
@@ -58,17 +66,21 @@ for (let i = 0; i < 25; i++) {
 //last car head light we enabled 
 let lastSpotLight = new THREE.SpotLight();
 
-function updateCar(obj) {
+function updateCar(obj, delta) {
     if (!hasSwitched) {
         return;
     }
     //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
     //this keeps the number of lights casting shadows low 
 
+    obj.update(delta);
+
    if ( obj.position.x - user.position.x === 0 ) {
+
+        user.setBoundingBox();
+
         //avoiding turning the same light on multiple times 
         if (obj.spotLight.id != lastSpotLight.id) {
-            console.log("Turning on car light at pos: ", obj.position, " player pos", user.position);
 
             lastSpotLight.castShadow = false;
             obj.spotLight.castShadow = true;
@@ -78,8 +90,9 @@ function updateCar(obj) {
         
         //console.log(obj.isIntersecting(user.boundingBox))
 
-        if (obj.isIntersecting(user.boundingBox)) {
+        if (obj.isIntersecting(user.boundingBox) && !hasCrashed &&( user.position.z <= obj.position.z + 11)) {
             console.warn("car hit player")
+            //hasCrashed = true;
         }
     }
 }
@@ -94,6 +107,8 @@ function animate() {
         if (user instanceof CustomUser) {
             customUser = user;
         }
+
+        userControls.update();
     }
 
 
@@ -101,16 +116,10 @@ function animate() {
     let delta = clock.getDelta();
 
     for (let obj of objToUpdate) {
-        obj.update(delta);
 
         if (obj.isCar) {
-            updateCar(obj);
+            updateCar(obj, delta );
         }
-    }
-
-    if (rotate) {
-        rotateAboutWorldAxis(scene.camera, new THREE.Vector3(0,1,0), Math.PI / 520);
-        scene.camera.lookAt(0,-2,0)
     }
 
     renderer.render(scene, scene.camera);    
@@ -119,17 +128,6 @@ function animate() {
 }
 
 animate();
-
-// rotates the camera around the scene
-function rotateAboutWorldAxis(object, axis, angle) {
-    var rotationMatrix = new THREE.Matrix4() ;
-    rotationMatrix.makeRotationAxis( axis.normalize() ,angle) ;
-    var currentPos = new THREE.Vector4(object.position.x, object.position.y, object.position.z, 1) ;
-    var newPos = currentPos.applyMatrix4( rotationMatrix );
-    object.position.x = newPos.x ;
-    object.position.y = newPos.y ;
-    object.position.z = newPos.z ;
-}
 
 /**
  * This function resizes the renderer when the window is resized
@@ -150,6 +148,7 @@ const shinySliderBody = document.getElementById("shinySliderBody");
 const emissiveButtonHead = document.getElementById("emessiveHead");
 const emissiveButtonBody = document.getElementById("emessiveBody");
 const presetSelector = document.getElementById("presetSelector");
+const play = document.getElementById("play");
 
 // These are the default values for the user
 var curColorBody = 0xff0000;
@@ -158,6 +157,33 @@ var shinynessHead = 0;
 var shinynessBody = 0;
 var emissiveHead = false;
 var emissiveBody = false;
+
+/**
+ * This function switches the scene when the user clicks the play button
+ */
+play.addEventListener("click", function() {
+    if (hasSwitched) {
+        return;
+    }
+
+    console.log("Going to next scene ");
+
+    // Hide CSS elements
+    document.getElementById("container").style.display = "none";
+    //set user
+    //user = scene.user;
+
+    //add user to new scene 
+    objScene.add(user);
+    user.translateZ(-20);
+
+    //switch scene 
+    scene = objScene;
+    
+    user.setBoundingBox();
+    
+    hasSwitched = true;
+});
 
 /**
  * This function changes the preset of the user based on what the user selects
@@ -281,9 +307,9 @@ texturePickerBody.addEventListener("change", function() {
         break;
         case "gold":
             user.bodySetTexture("./public/texture/GoldTexture.png", "./public/texture/GoldTextureNormal.png");
-            user.headMesh.material.shininess = 1000;
-            user.headMesh.material.specular = new THREE.Color(0xffd700);
-            user.headMesh.material.color = new THREE.Color(0xffd700);
+            user.bodyMesh.material.shininess = 1000;
+            user.bodyMesh.material.specular = new THREE.Color(0xffd700);
+            user.bodyMesh.material.color = new THREE.Color(0xffd700);
             user.bodyMesh.material.shininess = shinynessBody;
         break;
         case "none":
@@ -316,7 +342,6 @@ texturePickerHead.addEventListener("change", function() {
             user.headSetTexture("./public/texture/MetalTexture.png", "./public/texture/MetalTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffffff);
-            user.headMesh.material.shininess = shinynessHead;
         break;
         case "plastic":
             user.headSetTexture("./public/texture/PlasticTexture.png", "./public/texture/PlasticTextureNormal.png");
@@ -365,30 +390,30 @@ document.addEventListener("keydown", function(e) {
         
         //switch scenes - note we will probably replace this key with a button later
         case "Enter": 
-            if (hasSwitched) {
-                return;
-            }
+            // if (hasSwitched) {
+            //     return;
+            // }
 
-            console.log("Going to next scene ");
+            // console.log("Going to next scene ");
 
-            // Hide CSS elements
-            document.getElementById("container").style.display = "none";
-            //set user
-            //user = scene.user;
+            // // Hide CSS elements
+            // document.getElementById("container").style.display = "none";
+            // //set user
+            // //user = scene.user;
 
-            //add user to new scene 
-            objScene.add(user);
-            user.translateZ(-20);
+            // //add user to new scene 
+            // objScene.add(user);
+            // user.translateZ(-20);
 
-            //switch scene 
-            scene = objScene;
+            // //switch scene 
+            // scene = objScene;
             
-            user.setBoundingBox();
+            // user.setBoundingBox();
             
-            hasSwitched = true;
+            // hasSwitched = true;
             break;
         case 'r':
-            rotate = !rotate;
+            userControls.autoRotate = !userControls.autoRotate;
             break;
     }
 });
