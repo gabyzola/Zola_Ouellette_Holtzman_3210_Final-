@@ -21,24 +21,9 @@ export default class UserScene extends THREE.Scene {
         this.camera.rotateY(Math.PI / 2);
         this.camera.rotateX(-Math.PI / 8)
 
-        //this.camera.lookAt(new THREE.Vector3(0,5,0))
-
-
-        //this.controls = new OrbitControls(this.camera, renderer.domElement);
-        // this.controls.update();
-
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-        // const geometry = new THREE.PlaneGeometry(100000, 1000);
-        // const material = new THREE.MeshPhongMaterial({ color: 0x808071, side: THREE.DoubleSide });
-        // const plane = new THREE.Mesh(geometry, material);
-
-        // plane.rotateX(Math.PI / 2);
-        // plane.translateZ(3.85);
-        // plane.receiveShadow = true;
-
-        // this.add(plane);
 
         this.createLanes();
 
@@ -52,11 +37,12 @@ export default class UserScene extends THREE.Scene {
         const numLanes = 10;
 
         for (let i = 0; i < numLanes; i++) {
-            const type = i % 2 === 0 ? 'road' : 'grass'; 
+            const type = Math.round(Math.random() +1) % 2 === 0 ? 'road' : 'grass'; 
             const lane = new Lane(laneWidth, laneLength, type);
 
             // Position the lane based on its index
             lane.position.x = -laneWidth * i;
+            lane.position.y = -3.85
 
             this.add(lane);
             console.log(lane.road);
