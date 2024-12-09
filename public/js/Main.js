@@ -150,6 +150,7 @@ const shinySliderBody = document.getElementById("shinySliderBody");
 const emissiveButtonHead = document.getElementById("emessiveHead");
 const emissiveButtonBody = document.getElementById("emessiveBody");
 const presetSelector = document.getElementById("presetSelector");
+const play = document.getElementById("play");
 
 // These are the default values for the user
 var curColorBody = 0xff0000;
@@ -158,6 +159,33 @@ var shinynessHead = 0;
 var shinynessBody = 0;
 var emissiveHead = false;
 var emissiveBody = false;
+
+/**
+ * This function switches the scene when the user clicks the play button
+ */
+play.addEventListener("click", function() {
+    if (hasSwitched) {
+        return;
+    }
+
+    console.log("Going to next scene ");
+
+    // Hide CSS elements
+    document.getElementById("container").style.display = "none";
+    //set user
+    //user = scene.user;
+
+    //add user to new scene 
+    objScene.add(user);
+    user.translateZ(-20);
+
+    //switch scene 
+    scene = objScene;
+    
+    user.setBoundingBox();
+    
+    hasSwitched = true;
+});
 
 /**
  * This function changes the preset of the user based on what the user selects
@@ -281,9 +309,9 @@ texturePickerBody.addEventListener("change", function() {
         break;
         case "gold":
             user.bodySetTexture("./public/texture/GoldTexture.png", "./public/texture/GoldTextureNormal.png");
-            user.headMesh.material.shininess = 1000;
-            user.headMesh.material.specular = new THREE.Color(0xffd700);
-            user.headMesh.material.color = new THREE.Color(0xffd700);
+            user.bodyMesh.material.shininess = 1000;
+            user.bodyMesh.material.specular = new THREE.Color(0xffd700);
+            user.bodyMesh.material.color = new THREE.Color(0xffd700);
             user.bodyMesh.material.shininess = shinynessBody;
         break;
         case "none":
@@ -365,27 +393,27 @@ document.addEventListener("keydown", function(e) {
         
         //switch scenes - note we will probably replace this key with a button later
         case "Enter": 
-            if (hasSwitched) {
-                return;
-            }
+            // if (hasSwitched) {
+            //     return;
+            // }
 
-            console.log("Going to next scene ");
+            // console.log("Going to next scene ");
 
-            // Hide CSS elements
-            document.getElementById("container").style.display = "none";
-            //set user
-            //user = scene.user;
+            // // Hide CSS elements
+            // document.getElementById("container").style.display = "none";
+            // //set user
+            // //user = scene.user;
 
-            //add user to new scene 
-            objScene.add(user);
-            user.translateZ(-20);
+            // //add user to new scene 
+            // objScene.add(user);
+            // user.translateZ(-20);
 
-            //switch scene 
-            scene = objScene;
+            // //switch scene 
+            // scene = objScene;
             
-            user.setBoundingBox();
+            // user.setBoundingBox();
             
-            hasSwitched = true;
+            // hasSwitched = true;
             break;
         case 'r':
             rotate = !rotate;
