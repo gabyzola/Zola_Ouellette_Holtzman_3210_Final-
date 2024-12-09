@@ -38,7 +38,6 @@ var customUser = user;
 
 scene.add(user);
 
-var rotate = false;
 var hasCrashed = false;
 
 //create scene with objects for testing 
