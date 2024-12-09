@@ -49,7 +49,7 @@ export default class UserScene extends THREE.Scene{
 
         // Create the pedestal
         const pedestalGeometry = new THREE.CylinderGeometry(4, 4, 1, 32);
-        const pedestalMaterial = new THREE.MeshPhongMaterial({ map: loader.load('/texture/MarbleTexture.png') });
+        const pedestalMaterial = new THREE.MeshPhongMaterial({ map: loader.load('/textures/MarbleTexture.png') });
         const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
         pedestal.material.shininess = 1000;
         pedestal.receiveShadow = true;
@@ -60,7 +60,7 @@ export default class UserScene extends THREE.Scene{
 
         // Create the ground around the pedestal
         const groundGeometry = new THREE.PlaneGeometry(100, 100);
-        const groundMaterial = new THREE.MeshPhongMaterial({ map: loader.load('/texture/WoodTexture.png') });
+        const groundMaterial = new THREE.MeshPhongMaterial({ map: loader.load('/textures/WoodTexture.png') });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.receiveShadow = true;
         ground.rotation.x = -Math.PI / 2;
