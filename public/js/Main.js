@@ -90,9 +90,9 @@ function updateCar(obj, delta) {
         
         //console.log(obj.isIntersecting(user.boundingBox))
 
-        if (obj.isIntersecting(user.boundingBox) && !hasCrashed) {
+        if (obj.isIntersecting(user.boundingBox) && !hasCrashed &&( user.position.z <= obj.position.z + 11)) {
             console.warn("car hit player")
-            hasCrashed = true;
+            //hasCrashed = true;
         }
     }
 }
