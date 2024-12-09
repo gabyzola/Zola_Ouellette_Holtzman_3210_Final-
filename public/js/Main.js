@@ -8,6 +8,7 @@ import Nachos from './Nachos.js';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
 import Car from './vehicles/car';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -27,6 +28,12 @@ let hasSwitched = false;
 // Create a new UserScene
 let scene = new UserScene(renderer);
 var user = new CustomUser();
+
+var userControls = new OrbitControls(scene.camera, renderer.domElement);
+userControls.maxPolarAngle = Math.PI * 1.25 / 2;
+userControls.autoRotate = false;
+userControls.autoRotateSpeed = Math.PI;
+
 var customUser = user;
 
 scene.add(user);
@@ -94,6 +101,8 @@ function animate() {
         if (user instanceof CustomUser) {
             customUser = user;
         }
+
+        userControls.update();
     }
 
 
@@ -108,28 +117,12 @@ function animate() {
         }
     }
 
-    if (rotate) {
-        rotateAboutWorldAxis(scene.camera, new THREE.Vector3(0,1,0), Math.PI / 520);
-        scene.camera.lookAt(0,-2,0)
-    }
-
     renderer.render(scene, scene.camera);    
 
     stats.end();
 }
 
 animate();
-
-// rotates the camera around the scene
-function rotateAboutWorldAxis(object, axis, angle) {
-    var rotationMatrix = new THREE.Matrix4() ;
-    rotationMatrix.makeRotationAxis( axis.normalize() ,angle) ;
-    var currentPos = new THREE.Vector4(object.position.x, object.position.y, object.position.z, 1) ;
-    var newPos = currentPos.applyMatrix4( rotationMatrix );
-    object.position.x = newPos.x ;
-    object.position.y = newPos.y ;
-    object.position.z = newPos.z ;
-}
 
 /**
  * This function resizes the renderer when the window is resized
@@ -344,7 +337,6 @@ texturePickerHead.addEventListener("change", function() {
             user.headSetTexture("./public/texture/MetalTexture.png", "./public/texture/MetalTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffffff);
-            user.headMesh.material.shininess = shinynessHead;
         break;
         case "plastic":
             user.headSetTexture("./public/texture/PlasticTexture.png", "./public/texture/PlasticTextureNormal.png");
@@ -416,7 +408,7 @@ document.addEventListener("keydown", function(e) {
             // hasSwitched = true;
             break;
         case 'r':
-            rotate = !rotate;
+            userControls.autoRotate = !userControls.autoRotate;
             break;
     }
 });
