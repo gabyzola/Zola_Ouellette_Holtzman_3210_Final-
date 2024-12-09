@@ -10,6 +10,8 @@ export default class User extends THREE.Group {
         this.bodyMesh = null;
 
         this.jumpsize = 30; 
+
+        this.mixer = null;
     }
 
     /**
@@ -51,30 +53,41 @@ export default class User extends THREE.Group {
     }
 
     addAnimations() {
-         this.mixer = new THREE.AnimationMixer(this);
-         //Create Axis for Quaternion angle 
-         let xAxis = new THREE.Vector3(1, 0, 0);
-         //create final rotation quaternion 
-         let qFinal = new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI * 2);
-         //add animations clips p1 move to center
-         let clip = this._createAnimationClip(
-             [
-                 this.position.x, this.position.y, this.position.z,
-                 this.position.x - this.jumpsize/2, this.position.y + 5 , this.position.z,
-                 this.position.x - this.jumpsize, this.position.y, this.position.z,
+        this.mixer = new THREE.AnimationMixer(this);
+        //Create Axis for Quaternion angle 
+        let xAxis = new THREE.Vector3(1, 0, 0);
+        //create final rotation quaternion 
+        let qFinal = new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI * 2);
+        //add animations clips p1 move to center
+        
+        let clip = this._createAnimationClip(
+            [
+                this.position.x, this.position.y, this.position.z,
+                this.position.x - this.jumpsize/2, this.position.y + 5 , this.position.z,
+                this.position.x - this.jumpsize, this.position.y, this.position.z,
 
-             ],
-             [
-                 this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w,
-                 qFinal.x, qFinal.y, qFinal.z, qFinal.w,
-                 this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w
-             ]
-         )
-         //add clip to create clip
-         this.moveAnimation = this.mixer.clipAction(clip)
-         //only loop once 
-         //this.moveAnimation.loop = THREE.LoopOnce
-         //this.moveAnimation.clampWhenFinished = true;
+            ],
+            [
+                this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w,
+                qFinal.x, qFinal.y, qFinal.z, qFinal.w,
+                this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w
+            ]
+        )
+        
+        //add clip to create clip
+        this.moveAnimation = this.mixer.clipAction(clip)
+
+        //only loop once 
+        this.moveAnimation.loop = THREE.LoopOnce
+        this.moveAnimation.clampWhenFinished = true;
+    }
+
+    update(delta) {
+        if (!this.mixer) {
+            return;
+        }
+
+        this.mixer.update(delta);
     }
 
     /**

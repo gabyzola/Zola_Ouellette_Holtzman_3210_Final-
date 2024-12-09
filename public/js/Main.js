@@ -120,6 +120,9 @@ function animate() {
         if (obj.isCar) {
             updateCar(obj, delta );
         }
+        else {
+            obj.update(delta);
+        }
     }
 
     renderer.render(scene, scene.camera);    
@@ -413,6 +416,7 @@ document.addEventListener("keydown", function(e) {
             user.setBoundingBox();
             user.addAnimations();
             
+            objToUpdate.push(user);
             hasSwitched = true;
             break;
         case 'r':
