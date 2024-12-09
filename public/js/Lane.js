@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export class Lane extends THREE.Group {
+export default class Lane extends THREE.Group {
     /**
      * Represents a lane in the scene.
      * 
@@ -14,9 +14,14 @@ export class Lane extends THREE.Group {
         this.width = width;
         this.length = length;
         this.type = type;
+        this.road =false; 
 
         // Define the material based on type
         const color = type === 'road' ? 0x808071 : 0x228B22; 
+        if (color==0x808071 ){
+            this.road= true; 
+        }
+        
         const material = new THREE.MeshPhongMaterial({ color });
 
         // Create a box geometry for the lane

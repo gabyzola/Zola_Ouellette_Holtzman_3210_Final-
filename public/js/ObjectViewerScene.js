@@ -30,23 +30,25 @@ export default class UserScene extends THREE.Scene {
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-        const geometry = new THREE.PlaneGeometry(100000, 1000);
-        const material = new THREE.MeshPhongMaterial({ color: 0x808071, side: THREE.DoubleSide });
-        const plane = new THREE.Mesh(geometry, material);
+        // const geometry = new THREE.PlaneGeometry(100000, 1000);
+        // const material = new THREE.MeshPhongMaterial({ color: 0x808071, side: THREE.DoubleSide });
+        // const plane = new THREE.Mesh(geometry, material);
 
-        plane.rotateX(Math.PI / 2);
-        plane.translateZ(3.85);
-        plane.receiveShadow = true;
+        // plane.rotateX(Math.PI / 2);
+        // plane.translateZ(3.85);
+        // plane.receiveShadow = true;
 
-        this.add(plane);
+        // this.add(plane);
+
+        this.createLanes();
 
     }
      /**
      * Create alternating lanes of road and grass
      */
      createLanes() {
-        const laneWidth = 5;
-        const laneLength = 100;
+        const laneWidth = 30;
+        const laneLength = 300;
         const numLanes = 10;
 
         for (let i = 0; i < numLanes; i++) {
@@ -54,10 +56,10 @@ export default class UserScene extends THREE.Scene {
             const lane = new Lane(laneWidth, laneLength, type);
 
             // Position the lane based on its index
-            lane.position.z = -laneWidth * i;
-            lane.position.x = 0;
+            lane.position.x = -laneWidth * i;
 
             this.add(lane);
+            console.log(lane.road);
         }
     }
 }
