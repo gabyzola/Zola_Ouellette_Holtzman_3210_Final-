@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import User from './User.js';
+import User from './User/User.js';
 
 export default class CustomUser extends User {
     /**

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import Stats from "three/examples/jsm/libs/stats.module.js";
 
-import Oracle from './Oracle.js';
+import Oracle from './User/Oracle.js';
 import CustomUser from './CustomUser.js';
 import Nachos from './Nachos.js';
 import UserScene from './UserScene';
@@ -295,27 +295,27 @@ texturePickerBody.addEventListener("change", function() {
     switch (selectedTexture) {
         case "fabric":
             var color = user.bodyMesh.material.color;
-            user.bodySetTexture("./public/texture/FabricTexture.png", "./public/texture/FabricTextureNormal.png");
+            user.bodySetTexture("./public/textures/FabricTexture.png", "./public/textures/FabricTextureNormal.png");
             user.bodyMesh.material.color = color;
             user.bodyMesh.material.shininess = shinynessBody;
         break;
         case "metal":
-            user.bodySetTexture("./public/texture/MetalTexture.png", "./public/texture/MetalTextureNormal.png");
+            user.bodySetTexture("./public/textures/MetalTexture.png", "./public/textures/MetalTextureNormal.png");
             user.bodyMesh.material.shininess = 1000;
             user.bodyMesh.material.specular = new THREE.Color(0xffffff);
         break;
         case "plastic":
-            user.bodySetTexture("./public/texture/PlasticTexture.png", "./public/texture/PlasticTextureNormal.png");
+            user.bodySetTexture("./public/textures/PlasticTexture.png", "./public/textures/PlasticTextureNormal.png");
             user.bodyMesh.material.opacity = 0.75;
             user.bodyMesh.material.shininess = shinynessBody;
             user.bodyMesh.material.transparent = true;
         break;
         case "wood":
-            user.bodySetTexture("./public/texture/WoodTexture.png", "./public/texture/WoodTextureNormal.png");
+            user.bodySetTexture("./public/textures/WoodTexture.png", "./public/textures/WoodTextureNormal.png");
             user.bodyMesh.material.shininess = shinynessBody;
         break;
         case "gold":
-            user.bodySetTexture("./public/texture/GoldTexture.png", "./public/texture/GoldTextureNormal.png");
+            user.bodySetTexture("./public/textures/GoldTexture.png", "./public/textures/GoldTextureNormal.png");
             user.bodyMesh.material.shininess = 1000;
             user.bodyMesh.material.specular = new THREE.Color(0xffd700);
             user.bodyMesh.material.color = new THREE.Color(0xffd700);
@@ -336,30 +336,30 @@ texturePickerHead.addEventListener("change", function() {
     const selectedTexture = this.value;
     switch (selectedTexture) {
         case "gold":
-            user.headSetTexture("./public/texture/GoldTexture.png", "./public/texture/GoldTextureNormal.png");
+            user.headSetTexture("./public/textures/GoldTexture.png", "./public/textures/GoldTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffd700);
             user.headMesh.material.color = new THREE.Color(0xffd700);
         break;
         case "fabric":
             var color = user.headMesh.material.color;
-            user.headSetTexture("./public/texture/FabricTexture.png", "./public/texture/FabricTextureNormal.png");
+            user.headSetTexture("./public/textures/FabricTexture.png", "./public/textures/FabricTextureNormal.png");
             user.headMesh.material.color = color;
             user.headMesh.material.shininess = shinynessHead
         break;
         case "metal":
-            user.headSetTexture("./public/texture/MetalTexture.png", "./public/texture/MetalTextureNormal.png");
+            user.headSetTexture("./public/textures/MetalTexture.png", "./public/textures/MetalTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffffff);
             user.headMesh.material.shininess = shinynessHead;
         break;
         case "plastic":
-            user.headSetTexture("./public/texture/PlasticTexture.png", "./public/texture/PlasticTextureNormal.png");
+            user.headSetTexture("./public/textures/PlasticTexture.png", "./public/textures/PlasticTextureNormal.png");
             user.headMesh.material.opacity = 0.75;
             user.headMesh.material.transparent = true;
         break;
         case "wood":
-            user.headSetTexture("./public/texture/WoodTexture.png", "./public/texture/WoodTextureNormal.png");
+            user.headSetTexture("./public/textures/WoodTexture.png", "./public/textures/WoodTextureNormal.png");
             user.headMesh.material.shininess = shinynessHead
         break;
         case "none":
@@ -400,27 +400,27 @@ document.addEventListener("keydown", function(e) {
         
         //switch scenes - note we will probably replace this key with a button later
         case "Enter": 
-            // if (hasSwitched) {
-            //     return;
-            // }
+            if (hasSwitched) {
+                return;
+            }
 
-            // console.log("Going to next scene ");
+            console.log("Going to next scene ");
 
-            // // Hide CSS elements
-            // document.getElementById("container").style.display = "none";
-            // //set user
-            // //user = scene.user;
+            // Hide CSS elements
+            document.getElementById("container").style.display = "none";
+            //set user
+            //user = scene.user;
 
-            // //add user to new scene 
-            // objScene.add(user);
-            // user.translateZ(-20);
+            //add user to new scene 
+            objScene.add(user);
+            user.translateZ(-20);
 
-            // //switch scene 
-            // scene = objScene;
+            //switch scene 
+            scene = objScene;
             
-            // user.setBoundingBox();
+            user.setBoundingBox();
             
-            // hasSwitched = true;
+            hasSwitched = true;
             break;
         case 'r':
             rotate = !rotate;
