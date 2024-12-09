@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 
 export default class User extends THREE.Group {
+    /**
+     * This is the constructor for the Users character
+     */
     constructor() {
         super();
         this.headMesh = null;
@@ -9,6 +12,11 @@ export default class User extends THREE.Group {
         
     }
 
+    /**
+     * Sets the head of the user
+     * 
+     * @param {THREE.Mesh or THREE.Group} headMesh 
+     */
     setHead(headMesh) {
         this.headMesh = headMesh;
         this.headMesh.castShadow = true;
@@ -23,6 +31,11 @@ export default class User extends THREE.Group {
         this.castShadow = true;
     }
 
+    /**
+     * Sets the body of the user
+     * 
+     * @param {THREE.Mesh or THREE.Group} bodyMesh 
+     */
     setBody(bodyMesh) {
         this.bodyMesh = bodyMesh;
         bodyMesh.receiveShadow = true;
@@ -32,6 +45,9 @@ export default class User extends THREE.Group {
         
     }
 
+    /**
+     * Sets the bounding box of the user
+     */
     setBoundingBox() {
         this.boundingBox = new THREE.Box3().setFromObject(this);
         console.log(this.boundingBox);
