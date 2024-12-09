@@ -16,7 +16,21 @@ class Lane extends THREE.Group {
         this.length = length;
         this.type = type;
 
-    
+        // Define the material based on type
+        const color = type === 'road' ? 0x808071 : 0x228B22; 
+        const material = new THREE.MeshPhongMaterial({ color });
+
+        // Create a box geometry for the lane
+        const geometry = new THREE.BoxGeometry(width, 0.1, length);
+        const laneMesh = new THREE.Mesh(geometry, material);
+
+        // Position the lane geometry
+        laneMesh.receiveShadow = true;
+        laneMesh.castShadow = true;
+        laneMesh.position.y = 0.05; 
+
+        // Add the lane to the group
+        this.add(laneMesh);
     }
 }
 
@@ -24,12 +38,12 @@ export default class UserScene extends THREE.Scene {
     /**
      * This is the scene for the user selections and being able to access the user afters
      * 
-     * @param {THREE.WebGLRenderer} renderer is the renderer that will be used to render the scene
+     * @param {THREE.WebGLRenderer} renderer 
      */
     constructor(renderer) {
         super();
 
-        // Create a camera, which determines what we'll see when we render the scene
+        // Create a camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 300);
 
         this.camera.position.z = -20; //move camera right 
@@ -58,5 +72,24 @@ export default class UserScene extends THREE.Scene {
 
         this.add(plane);
 
+    }
+     /**
+     * Create alternating lanes of road and grass
+     */
+     createLanes() {
+        const laneWidth = 5;
+        const laneLength = 100;
+        const numLanes = 10;
+
+        for (let i = 0; i < numLanes; i++) {
+            const type = i % 2 === 0 ? 'road' : 'grass'; 
+            const lane = new Lane(laneWidth, laneLength, type);
+
+            // Position the lane based on its index
+            lane.position.z = -laneWidth * i;
+            lane.position.x = 0;
+
+            this.add(lane);
+        }
     }
 }
