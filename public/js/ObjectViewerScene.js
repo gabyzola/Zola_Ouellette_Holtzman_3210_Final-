@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
-export default class UserScene extends THREE.Scene{
+export default class ObjectViewerScene extends THREE.Scene{
     /**
      * This is the scene for the user selections and being able to access the user afters
      * 
