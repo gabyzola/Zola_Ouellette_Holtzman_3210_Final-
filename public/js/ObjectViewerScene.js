@@ -1,7 +1,26 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
-export default class UserScene extends THREE.Scene{
+class Lane extends THREE.Group {
+    /**
+     * Represents a lane in the scene.
+     * 
+     * @param {number} width Width of the lane.
+     * @param {number} length Length of the lane.
+     * @param {string} type Type of the lane ('road' or 'grass').
+     */
+    constructor(width, length, type) {
+        super();
+
+        this.width = width;
+        this.length = length;
+        this.type = type;
+
+    
+    }
+}
+
+export default class UserScene extends THREE.Scene {
     /**
      * This is the scene for the user selections and being able to access the user afters
      * 
@@ -14,30 +33,30 @@ export default class UserScene extends THREE.Scene{
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 300);
 
         this.camera.position.z = -20; //move camera right 
-        this.camera.position.x = 35; 
+        this.camera.position.x = 35;
         this.camera.position.y = 25; //move up
 
-        this.camera.rotateY(Math.PI/2);
-        this.camera.rotateX(-Math.PI/8)
+        this.camera.rotateY(Math.PI / 2);
+        this.camera.rotateX(-Math.PI / 8)
 
         //this.camera.lookAt(new THREE.Vector3(0,5,0))
 
 
         //this.controls = new OrbitControls(this.camera, renderer.domElement);
-       // this.controls.update();
+        // this.controls.update();
 
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-        const geometry = new THREE.PlaneGeometry( 100000, 1000 );
-        const material = new THREE.MeshPhongMaterial( {color: 0x808071, side: THREE.DoubleSide} );
-        const plane = new THREE.Mesh( geometry, material );
+        const geometry = new THREE.PlaneGeometry(100000, 1000);
+        const material = new THREE.MeshPhongMaterial({ color: 0x808071, side: THREE.DoubleSide });
+        const plane = new THREE.Mesh(geometry, material);
 
-        plane.rotateX(Math.PI/2);
+        plane.rotateX(Math.PI / 2);
         plane.translateZ(3.85);
         plane.receiveShadow = true;
 
         this.add(plane);
-        
+
     }
 }
