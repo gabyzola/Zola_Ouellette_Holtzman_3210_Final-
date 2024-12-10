@@ -78,6 +78,29 @@ export default class ObjectViewerScene extends THREE.Scene{
         this.mixer.update(delta);
     }
 
+    playDeathAnimation() {
+        this.moveForwardAnimation.stop();
+
+        let clip = this._createAnimationClip(
+            [
+                this.camera.position.x, this.camera.position.y, this.camera.position.z,
+                this.camera.position.x - 20, this.camera.position.y - 2 , this.camera.position.z - 4,
+                this.camera.position.x - 40, this.camera.position.y - 5, this.camera.position.z - 8,
+            ],
+            [
+                this.camera.quaternion.x, this.camera.quaternion.y,  this.camera.quaternion.z, this.camera.quaternion.w,
+                this.camera.quaternion.x, this.camera.quaternion.y/2,  this.camera.quaternion.z/2, this.camera.quaternion.w,
+                this.camera.quaternion.x, this.camera.quaternion.y/4,  this.camera.quaternion.z/4, this.camera.quaternion.w,
+            ]
+        )
+        
+        this.deathClip = this.mixer.clipAction(clip);
+        this.deathClip.timeScale = 0.8;
+        this.deathClip.loop = THREE.LoopOnce;
+        this.deathClip.clampWhenFinished = true;
+        this.deathClip.play();
+    }
+    
     /**
      * Creates new animation clip 
      * 
@@ -85,9 +108,16 @@ export default class ObjectViewerScene extends THREE.Scene{
      * @param {Array} quaternionArray Array of legnth 9 with rotations as Quaternions
      * @returns {THREE.AnimationClip} a new animation clip
      */
-    _createAnimationClip(positionArray, quaternionArray) {
+    _createAnimationClip(positionArray, quaternionArray=null) {
         let position = new THREE.VectorKeyframeTrack('.position', [0, 0.35, 0.70], positionArray)
+        
+        if (!quaternionArray) {
+            return new THREE.AnimationClip('action', 3, [position])
 
-        return new THREE.AnimationClip('action', 3, [position])
+        }
+        let quaternionKF = new THREE.QuaternionKeyframeTrack('.quaternion', [0, 0.35, 0.70], quaternionArray);
+
+        return new THREE.AnimationClip('action', 3, [position, quaternionKF])
     }
+
 }

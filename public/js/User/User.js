@@ -110,7 +110,7 @@ export default class User extends THREE.Group {
             [
                 this.position.x - this.jumpsize , this.position.y, this.position.z,
                 this.position.x - this.jumpsize/2, this.position.y + 20 , this.position.z - 20,
-                this.position.x - this.jumpsize/4, this.position.y, this.position.z - 40,
+                this.position.x - this.jumpsize/4, this.position.y - 3, this.position.z - 40,
 
             ],
             [

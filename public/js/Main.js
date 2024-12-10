@@ -93,7 +93,7 @@ function updateCar(obj, delta) {
         if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 12)) {
             console.warn("car hit player")
             user.kill();
-
+            objScene.playDeathAnimation();
             hasCrashed = true;
         }
     }
@@ -381,7 +381,7 @@ document.addEventListener("keydown", function(e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70 || hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || hasCrashed)) {
                 return;
             }
 
@@ -397,13 +397,12 @@ document.addEventListener("keydown", function(e) {
                 //objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
             }
-
             animationClock.start()
             break;
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70 || hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || hasCrashed)) {
                 return;
             }
 
