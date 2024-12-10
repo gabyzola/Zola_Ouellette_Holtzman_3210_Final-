@@ -13,6 +13,7 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
+renderer.setClearColor(0x87CEEB);
 
 //stats for fps counter
 const stats = new Stats()
