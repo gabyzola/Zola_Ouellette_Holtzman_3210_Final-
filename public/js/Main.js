@@ -21,6 +21,7 @@ document.body.appendChild(stats.dom)
 
 //clock for delta time 
 const clock = new THREE.Clock();
+const animationClock = new THREE.Clock();
 
 //keep track of which scene we are currently in 
 let hasSwitched = false;
@@ -38,7 +39,6 @@ var customUser = user;
 
 scene.add(user);
 
-var rotate = false;
 var hasCrashed = false;
 
 //create scene with objects for testing 
@@ -88,7 +88,6 @@ function updateCar(obj, delta) {
             lastSpotLight = obj.spotLight;
         }
         
-        //console.log(obj.isIntersecting(user.boundingBox))
 
         if (obj.isIntersecting(user.boundingBox) && !hasCrashed &&( user.position.z <= obj.position.z + 11)) {
             console.warn("car hit player")
@@ -165,6 +164,10 @@ var emissiveBody = false;
  * This function switches the scene when the user clicks the play button
  */
 play.addEventListener("click", function() {
+    switchScene();
+});
+
+function switchScene() {
     if (hasSwitched) {
         return;
     }
@@ -179,6 +182,7 @@ play.addEventListener("click", function() {
     //add user to new scene 
     objScene.add(user);
     user.translateZ(-20);
+    user.translateY(2);
 
     //switch scene 
     scene = objScene;
@@ -186,8 +190,11 @@ play.addEventListener("click", function() {
     user.setBoundingBox();
     user.addAnimations();
     
+    objToUpdate.push(user);
     hasSwitched = true;
-});
+
+    animationClock.start()
+}
 
 /**
  * This function changes the preset of the user based on what the user selects
@@ -369,55 +376,38 @@ document.addEventListener("keydown", function(e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70)) {
                 return;
             }
+
             //user.translateX(-jumpSize); 
-            user.moveAnimation.play();
-            console.log(user.moveAnimation);
+            user.addAnimations();
+            user.moveForwardAnimation.play();
             
             //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
-                //objScene.camera.position.x -= jumpSize
+                objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
             }
 
+            animationClock.start()
             break;
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70)) {
                 return;
             }
 
-            user.translateX(jumpSize);
+            user.addAnimations();
+            user.moveBackwardAnimation.play();
+
+            animationClock.start();
             break;
         
         //switch scenes - note we will probably replace this key with a button later
         case "Enter": 
-            if (hasSwitched) {
-                return;
-            }
-
-            console.log("Going to next scene ");
-
-            // Hide CSS elements
-            document.getElementById("container").style.display = "none";
-            //set user
-            //user = scene.user;
-
-            //add user to new scene 
-            objScene.add(user);
-            user.translateZ(-20);
-
-            //switch scene 
-            scene = objScene;
-            
-            user.setBoundingBox();
-            user.addAnimations();
-            
-            objToUpdate.push(user);
-            hasSwitched = true;
+            switchScene();
             break;
         case 'r':
             userControls.autoRotate = !userControls.autoRotate;
