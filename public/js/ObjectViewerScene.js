@@ -79,11 +79,13 @@ export default class ObjectViewerScene extends THREE.Scene{
     }
 
     playDeathAnimation() {
+        this.moveForwardAnimation.stop();
+
         let clip = this._createAnimationClip(
             [
-                this.position.x, this.position.y, this.position.z,
-                this.position.x - this.jumpsize, this.position.y  , this.position.z,
-                this.position.x - this.jumpsize*2, this.position.y, this.position.z,
+                this.camera.position.x, this.camera.position.y, this.camera.position.z,
+                this.camera.position.x - 20, this.camera.position.y - 2 , this.camera.position.z - 4,
+                this.camera.position.x - 40, this.camera.position.y - 5, this.camera.position.z - 8,
             ],
             [
                 this.camera.quaternion.x, this.camera.quaternion.y,  this.camera.quaternion.z, this.camera.quaternion.w,
