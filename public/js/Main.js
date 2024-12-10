@@ -126,6 +126,11 @@ function animate() {
         }
     }
 
+    if(scene instanceof ObjectViewerScene){
+        scene.animate(user.position.x); 
+       
+    }
+
     renderer.render(scene, scene.camera);    
 
     stats.end();
