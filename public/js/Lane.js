@@ -30,8 +30,6 @@ export default class Lane extends THREE.Group {
 
         // Position the lane geometry
         laneMesh.receiveShadow = true;
-        laneMesh.castShadow = true;
-        laneMesh.position.y = 0.05; 
 
         // Add the lane to the group
         this.add(laneMesh);
