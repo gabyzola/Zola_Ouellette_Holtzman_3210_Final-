@@ -52,6 +52,7 @@ export default class User extends THREE.Group {
     addAnimations() {
         this.mixer = new THREE.AnimationMixer(this);
         //Create Axis for Quaternion angle 
+
         let yAxis = new THREE.Vector3(0, 1, 0);
         //create final rotation quaternion 
         let qFinal = new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI * 2);
@@ -66,7 +67,7 @@ export default class User extends THREE.Group {
             [
                 0, 0, 0, 1,
                 0, -1, 0, 0,
-                qFinal.x, -qFinal.y, qFinal.z, qFinal.w
+                qFinal.x, qFinal.y, qFinal.z, qFinal.w
             ]
         )
         
@@ -94,9 +95,40 @@ export default class User extends THREE.Group {
         this.moveBackwardAnimation = this.mixer.clipAction(clip);
         this.moveBackwardAnimation.loop = THREE.LoopOnce;
         this.moveBackwardAnimation.clampWhenFinished = true;
-        
     }
     
+    kill() {
+        this.moveForwardAnimation.stop();
+        this.moveBackwardAnimation.stop();
+
+        //Create Axis for Quaternion angle 
+        let yAxis = new THREE.Vector3(-1, 0, 0);
+        //create final rotation quaternion 
+        let qFinal = new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI * 2);
+        
+        let clip = this._createAnimationClip(
+            [
+                this.position.x - this.jumpsize , this.position.y, this.position.z,
+                this.position.x - this.jumpsize/2, this.position.y + 20 , this.position.z - 10,
+                this.position.x - this.jumpsize/4, this.position.y, this.position.z - 20,
+
+            ],
+            [
+                0, 0, 0, 1,
+                qFinal.x, qFinal.y, qFinal.z, qFinal.w,
+                qFinal.x, qFinal.y, qFinal.z, qFinal.w,
+            ]
+        )
+        
+        //add clip to create clip
+        this.deathClip = this.mixer.clipAction(clip);
+
+        //only loop once 
+        this.deathClip.loop = THREE.LoopOnce;
+        this.deathClip.clampWhenFinished = true;
+        this.deathClip.play();
+    }
+
     update(delta) {
         if (!this.mixer) {
             return;
@@ -105,6 +137,8 @@ export default class User extends THREE.Group {
         this.setBoundingBox();
         this.mixer.update(delta);
     }
+
+    
 
     /**
      * Creates new animation clip 
@@ -119,6 +153,5 @@ export default class User extends THREE.Group {
 
         return new THREE.AnimationClip('action', 3, [position, quaternionKF])
     }
-
     
 }

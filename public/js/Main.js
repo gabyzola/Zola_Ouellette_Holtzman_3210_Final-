@@ -89,9 +89,11 @@ function updateCar(obj, delta) {
         }
         
 
-        if (obj.isIntersecting(user.boundingBox) && !hasCrashed &&( user.position.z <= obj.position.z + 11)) {
+        if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 11)) {
             console.warn("car hit player")
-            //hasCrashed = true;
+            user.kill();
+
+            hasCrashed = true;
         }
     }
 }
@@ -109,7 +111,6 @@ function animate() {
 
         userControls.update();
     }
-
 
     //update each of our objects by delta 
     let delta = clock.getDelta();
@@ -183,6 +184,7 @@ function switchScene() {
     objScene.add(user);
     user.translateZ(-20);
     user.translateY(2);
+    user.rotateY(Math.PI/2)
 
     //switch scene 
     scene = objScene;
@@ -378,11 +380,10 @@ document.addEventListener("keydown", function(e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70 || hasCrashed)) {
                 return;
             }
 
-            //user.translateX(-jumpSize); 
             user.addAnimations();
 
             user.moveForwardAnimation.play();
@@ -401,7 +402,7 @@ document.addEventListener("keydown", function(e) {
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70 || hasCrashed)) {
                 return;
             }
 
