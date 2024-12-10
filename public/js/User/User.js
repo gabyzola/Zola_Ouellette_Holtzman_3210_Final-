@@ -52,9 +52,9 @@ export default class User extends THREE.Group {
     addAnimations() {
         this.mixer = new THREE.AnimationMixer(this);
         //Create Axis for Quaternion angle 
-        let xAxis = new THREE.Vector3(1, 0, 0);
+        let yAxis = new THREE.Vector3(0, 1, 0);
         //create final rotation quaternion 
-        let qFinal = new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI * 2);
+        let qFinal = new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI * 2);
         
         let clip = this._createAnimationClip(
             [
@@ -64,9 +64,9 @@ export default class User extends THREE.Group {
 
             ],
             [
-                this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w,
-                -this.quaternion.x, -this.quaternion.y, this.quaternion.z, this.quaternion.w,
-                qFinal.x, qFinal.y, qFinal.z, qFinal.w,
+                0, 0, 0, 1,
+                0, -1, 0, 0,
+                qFinal.x, -qFinal.y, qFinal.z, qFinal.w
             ]
         )
         
@@ -85,9 +85,9 @@ export default class User extends THREE.Group {
 
             ],
             [
-                this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w,
-                this.quaternion.x, this.quaternion.y, this.quaternion.z, this.quaternion.w,
-                qFinal.x, qFinal.y, qFinal.z, qFinal.w,
+                0, 0, 0, 1,
+                0, 1, 0, 0,
+                qFinal.x, -qFinal.y, qFinal.z, qFinal.w       
             ]
         )
 
@@ -96,11 +96,7 @@ export default class User extends THREE.Group {
         this.moveBackwardAnimation.clampWhenFinished = true;
         
     }
-
-    stopAnimations() {
-
-    }
-
+    
     update(delta) {
         if (!this.mixer) {
             return;
