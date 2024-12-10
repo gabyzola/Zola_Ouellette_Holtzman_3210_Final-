@@ -44,7 +44,7 @@ scene.add(user);
 var hasCrashed = false;
 
 //create scene with objects for testing 
-let objScene =  new ObjectViewerScene(renderer);
+let objScene = new ObjectViewerScene(renderer);
 
 //variables used in controlling movement 
 let farest = 0; //farest we have gone so far 
@@ -57,7 +57,7 @@ let objToUpdate = [];
 //create cars
 //@NOTE we will need to replace this with an object pool I just wanted to check logic 
 for (let i = 0; i < 25; i++) {
-    let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
+    let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()));
     objScene.add(car);
     car.position.x = -i * jumpSize;
     car.position.z = THREE.MathUtils.randFloat(50, 150);
@@ -77,7 +77,7 @@ function updateCar(obj, delta) {
 
     obj.update(delta);
 
-   if ( obj.position.x - user.position.x === 0 ) {
+    if (obj.position.x - user.position.x === 0) {
 
         user.setBoundingBox();
 
@@ -89,13 +89,23 @@ function updateCar(obj, delta) {
 
             lastSpotLight = obj.spotLight;
         }
-        
+
 
         if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 12)) {
             console.warn("car hit player")
             user.kill();
             objScene.playDeathAnimation();
             hasCrashed = true;
+
+            // CHAT GPT 
+            // Show custom Game Over modal
+            document.getElementById("game-over-modal").style.display = "flex";
+            document.getElementById("retry-button").addEventListener("click", function () {
+                // Handle game restart logic here 
+                location.reload();  
+            });
+
+
         }
     }
 }
@@ -120,19 +130,19 @@ function animate() {
     for (let obj of objToUpdate) {
 
         if (obj.isCar) {
-            updateCar(obj, delta );
+            updateCar(obj, delta);
         }
         else {
             obj.update(delta);
         }
     }
 
-    if(scene instanceof ObjectViewerScene){
-        scene.animate(user.position.x); 
-       
+    if (scene instanceof ObjectViewerScene) {
+        scene.animate(user.position.x);
+
     }
 
-    renderer.render(scene, scene.camera);    
+    renderer.render(scene, scene.camera);
 
     stats.end();
 }
@@ -171,7 +181,7 @@ var emissiveBody = false;
 /**
  * This function switches the scene when the user clicks the play button
  */
-play.addEventListener("click", function() {
+play.addEventListener("click", function () {
     switchScene();
 });
 
@@ -191,14 +201,14 @@ function switchScene() {
     objScene.add(user);
     user.translateZ(-20);
     user.translateY(2);
-    user.rotateY(Math.PI/2)
+    user.rotateY(Math.PI / 2)
 
     //switch scene 
     scene = objScene;
-    
+
     user.setBoundingBox();
     user.addAnimations();
-    
+
     objToUpdate.push(user);
     objToUpdate.push(objScene);
 
@@ -210,7 +220,7 @@ function switchScene() {
 /**
  * This function changes the preset of the user based on what the user selects
  */
-presetSelector.addEventListener("change", function() {
+presetSelector.addEventListener("change", function () {
     var preset = this.value;
     switch (preset) {
         case "oracle":
@@ -218,26 +228,26 @@ presetSelector.addEventListener("change", function() {
             scene.remove(user);
             user = new Oracle();
             scene.add(user);
-        break;
+            break;
         case "none":
             document.getElementById("noPresets").style.display = "flex";
             scene.remove(user);
             user = customUser;
             scene.add(user);
-        break;
+            break;
         case "nachos":
             document.getElementById("noPresets").style.display = "none";
             scene.remove(user);
             user = new Nachos();
             scene.add(user);
-        break;
+            break;
     }
 });
 
 /**
  * This function changes the color of the head based on what the user selects
  */
-emissiveButtonHead.addEventListener("click", function() {
+emissiveButtonHead.addEventListener("click", function () {
     emissiveHead = !emissiveHead;
     if (emissiveHead) {
         user.headMesh.material.emissive.set(new THREE.Color(curColorHead));
@@ -251,7 +261,7 @@ emissiveButtonHead.addEventListener("click", function() {
 /**
  * This function changes the color of the head based on what the user selects
 */
-emissiveButtonBody.addEventListener("click", function() {
+emissiveButtonBody.addEventListener("click", function () {
     emissiveBody = !emissiveBody;
     if (emissiveBody) {
         user.bodyMesh.material.emissive.set(new THREE.Color(curColorBody));
@@ -265,7 +275,7 @@ emissiveButtonBody.addEventListener("click", function() {
 /**
  * This function changes the color of the body based on what the user selects
  */
-colorPickerBody.addEventListener("change", function() {
+colorPickerBody.addEventListener("change", function () {
     curColorBody = this.value;
     user.bodySetMaterial(curColorBody);
     if (emissiveBody) {
@@ -276,7 +286,7 @@ colorPickerBody.addEventListener("change", function() {
 /**
  * This function changes the color of the head based on what the user selects
  */
-colorPickerHead.addEventListener("change", function() {
+colorPickerHead.addEventListener("change", function () {
     curColorHead = this.value;
     user.headSetMaterial(curColorHead);
     if (emissiveHead) {
@@ -287,7 +297,7 @@ colorPickerHead.addEventListener("change", function() {
 /**
  * This function changes the shinyness of the head based on what the user selects
  */
-shinySliderHead.addEventListener("change", function() {
+shinySliderHead.addEventListener("change", function () {
     shinynessHead = this.value;
     user.headMesh.material.shininess = shinynessHead;
 });
@@ -295,7 +305,7 @@ shinySliderHead.addEventListener("change", function() {
 /**
  * This function changes the shinyness of the body based on what the user selects
  */
-shinySliderBody.addEventListener("change", function() {
+shinySliderBody.addEventListener("change", function () {
     shinynessBody = this.value;
     user.bodyMesh.material.shininess = shinynessBody;
 });
@@ -303,7 +313,7 @@ shinySliderBody.addEventListener("change", function() {
 /**
  * This function changes the texture of the body based on what the user selects
  */
-texturePickerBody.addEventListener("change", function() {
+texturePickerBody.addEventListener("change", function () {
     const selectedTexture = this.value;
     switch (selectedTexture) {
         case "fabric":
@@ -311,41 +321,41 @@ texturePickerBody.addEventListener("change", function() {
             user.bodySetTexture("/textures/FabricTexture.png", "/textures/FabricTextureNormal.png");
             user.bodyMesh.material.color = color;
             user.bodyMesh.material.shininess = shinynessBody;
-        break;
+            break;
         case "metal":
             user.bodySetTexture("/textures/MetalTexture.png", "/textures/MetalTextureNormal.png");
             user.bodyMesh.material.shininess = 1000;
             user.bodyMesh.material.specular = new THREE.Color(0xffffff);
-        break;
+            break;
         case "plastic":
             user.bodySetTexture("/textures/PlasticTexture.png", "/textures/PlasticTextureNormal.png");
             user.bodyMesh.material.opacity = 0.75;
             user.bodyMesh.material.shininess = shinynessBody;
             user.bodyMesh.material.transparent = true;
-        break;
+            break;
         case "wood":
             user.bodySetTexture("/textures/WoodTexture.png", "/textures/WoodTextureNormal.png");
             user.bodyMesh.material.shininess = shinynessBody;
-        break;
+            break;
         case "gold":
             user.bodySetTexture("/textures/GoldTexture.png", "/textures/GoldTextureNormal.png");
             user.bodyMesh.material.shininess = 1000;
             user.bodyMesh.material.specular = new THREE.Color(0xffd700);
             user.bodyMesh.material.color = new THREE.Color(0xffd700);
             user.bodyMesh.material.shininess = shinynessBody;
-        break;
+            break;
         case "none":
             user.bodyMesh.material = new THREE.MeshPhongMaterial({ color: curColorBody });
             user.bodyMesh.material.shininess = shinynessBody;
 
-        break;
+            break;
     }
 });
 
 /**
  * This function changes the texture of the head based on what the user selects
  */
-texturePickerHead.addEventListener("change", function() {
+texturePickerHead.addEventListener("change", function () {
     const selectedTexture = this.value;
     switch (selectedTexture) {
         case "gold":
@@ -353,36 +363,36 @@ texturePickerHead.addEventListener("change", function() {
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffd700);
             user.headMesh.material.color = new THREE.Color(0xffd700);
-        break;
+            break;
         case "fabric":
             var color = user.headMesh.material.color;
             user.headSetTexture("/textures/FabricTexture.png", "/textures/FabricTextureNormal.png");
             user.headMesh.material.color = color;
             user.headMesh.material.shininess = shinynessHead
-        break;
+            break;
         case "metal":
             user.headSetTexture("/textures/MetalTexture.png", "/textures/MetalTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffffff);
-        break;
+            break;
         case "plastic":
             user.headSetTexture("/textures/PlasticTexture.png", "/textures/PlasticTextureNormal.png");
             user.headMesh.material.opacity = 0.75;
             user.headMesh.material.transparent = true;
-        break;
+            break;
         case "wood":
             user.headSetTexture("/textures/WoodTexture.png", "/textures/WoodTextureNormal.png");
             user.headMesh.material.shininess = shinynessHead
-        break;
+            break;
         case "none":
             user.headMesh.material = new THREE.MeshPhongMaterial({ color: curColorHead });
             user.headMesh.material.shininess = shinynessHead
-        break;
+            break;
     }
 });
 
 // Add a keyboard short cuts
-document.addEventListener("keydown", function(e) {
+document.addEventListener("keydown", function (e) {
     switch (e.key) {
         //move forwards 
         case "w":
@@ -394,7 +404,7 @@ document.addEventListener("keydown", function(e) {
             user.addAnimations();
 
             user.moveForwardAnimation.play();
-            
+
             //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
                 objScene.updateCameraAnimations();
@@ -417,9 +427,9 @@ document.addEventListener("keydown", function(e) {
 
             animationClock.start();
             break;
-        
+
         //switch scenes - note we will probably replace this key with a button later
-        case "Enter": 
+        case "Enter":
             switchScene();
             break;
         case 'r':
