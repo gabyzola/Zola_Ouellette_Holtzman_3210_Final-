@@ -93,7 +93,7 @@ function updateCar(obj, delta) {
         if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 12)) {
             console.warn("car hit player")
             user.kill();
-
+            objScene.playDeathAnimation();
             hasCrashed = true;
         }
     }

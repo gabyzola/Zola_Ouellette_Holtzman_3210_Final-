@@ -78,6 +78,27 @@ export default class ObjectViewerScene extends THREE.Scene{
         this.mixer.update(delta);
     }
 
+    playDeathAnimation() {
+        let clip = this._createAnimationClip(
+            [
+                this.position.x, this.position.y, this.position.z,
+                this.position.x - this.jumpsize, this.position.y  , this.position.z,
+                this.position.x - this.jumpsize*2, this.position.y, this.position.z,
+            ],
+            [
+                this.camera.quaternion.x, this.camera.quaternion.y,  this.camera.quaternion.z, this.camera.quaternion.w,
+                this.camera.quaternion.x, this.camera.quaternion.y/2,  this.camera.quaternion.z/2, this.camera.quaternion.w,
+                this.camera.quaternion.x, this.camera.quaternion.y/4,  this.camera.quaternion.z/4, this.camera.quaternion.w,
+            ]
+        )
+        
+        this.deathClip = this.mixer.clipAction(clip);
+        this.deathClip.timeScale = 0.8;
+        this.deathClip.loop = THREE.LoopOnce;
+        this.deathClip.clampWhenFinished = true;
+        this.deathClip.play();
+    }
+    
     /**
      * Creates new animation clip 
      * 
@@ -85,9 +106,16 @@ export default class ObjectViewerScene extends THREE.Scene{
      * @param {Array} quaternionArray Array of legnth 9 with rotations as Quaternions
      * @returns {THREE.AnimationClip} a new animation clip
      */
-    _createAnimationClip(positionArray, quaternionArray) {
+    _createAnimationClip(positionArray, quaternionArray=null) {
         let position = new THREE.VectorKeyframeTrack('.position', [0, 0.35, 0.70], positionArray)
+        
+        if (!quaternionArray) {
+            return new THREE.AnimationClip('action', 3, [position])
 
-        return new THREE.AnimationClip('action', 3, [position])
+        }
+        let quaternionKF = new THREE.QuaternionKeyframeTrack('.quaternion', [0, 0.35, 0.70], quaternionArray);
+
+        return new THREE.AnimationClip('action', 3, [position, quaternionKF])
     }
+
 }
