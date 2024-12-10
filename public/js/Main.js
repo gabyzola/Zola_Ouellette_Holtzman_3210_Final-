@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Stats from "three/examples/jsm/libs/stats.module.js";
 
 import Oracle from './User/Oracle.js';
-import CustomUser from './CustomUser.js';
+import CustomUser from './User/CustomUser.js';
 import Nachos from './User/Nachos.js';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
@@ -21,6 +21,7 @@ document.body.appendChild(stats.dom)
 
 //clock for delta time 
 const clock = new THREE.Clock();
+const animationClock = new THREE.Clock();
 
 //keep track of which scene we are currently in 
 let hasSwitched = false;
@@ -88,11 +89,12 @@ function updateCar(obj, delta) {
             lastSpotLight = obj.spotLight;
         }
         
-        //console.log(obj.isIntersecting(user.boundingBox))
 
-        if (obj.isIntersecting(user.boundingBox) && !hasCrashed &&( user.position.z <= obj.position.z + 11)) {
+        if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 11)) {
             console.warn("car hit player")
-            //hasCrashed = true;
+            user.kill();
+
+            hasCrashed = true;
         }
     }
 }
@@ -111,7 +113,6 @@ function animate() {
         userControls.update();
     }
 
-
     //update each of our objects by delta 
     let delta = clock.getDelta();
 
@@ -119,6 +120,9 @@ function animate() {
 
         if (obj.isCar) {
             updateCar(obj, delta );
+        }
+        else {
+            obj.update(delta);
         }
     }
 
@@ -162,6 +166,10 @@ var emissiveBody = false;
  * This function switches the scene when the user clicks the play button
  */
 play.addEventListener("click", function() {
+    switchScene();
+});
+
+function switchScene() {
     if (hasSwitched) {
         return;
     }
@@ -176,14 +184,22 @@ play.addEventListener("click", function() {
     //add user to new scene 
     objScene.add(user);
     user.translateZ(-20);
+    user.translateY(2);
+    user.rotateY(Math.PI/2)
 
     //switch scene 
     scene = objScene;
     
     user.setBoundingBox();
+    user.addAnimations();
     
+    objToUpdate.push(user);
+    objToUpdate.push(objScene);
+
     hasSwitched = true;
-});
+
+    animationClock.start()
+}
 
 /**
  * This function changes the preset of the user based on what the user selects
@@ -286,27 +302,27 @@ texturePickerBody.addEventListener("change", function() {
     switch (selectedTexture) {
         case "fabric":
             var color = user.bodyMesh.material.color;
-            user.bodySetTexture("./public/textures/FabricTexture.png", "./public/textures/FabricTextureNormal.png");
+            user.bodySetTexture("/textures/FabricTexture.png", "/textures/FabricTextureNormal.png");
             user.bodyMesh.material.color = color;
             user.bodyMesh.material.shininess = shinynessBody;
         break;
         case "metal":
-            user.bodySetTexture("./public/textures/MetalTexture.png", "./public/textures/MetalTextureNormal.png");
+            user.bodySetTexture("/textures/MetalTexture.png", "/textures/MetalTextureNormal.png");
             user.bodyMesh.material.shininess = 1000;
             user.bodyMesh.material.specular = new THREE.Color(0xffffff);
         break;
         case "plastic":
-            user.bodySetTexture("./public/textures/PlasticTexture.png", "./public/textures/PlasticTextureNormal.png");
+            user.bodySetTexture("/textures/PlasticTexture.png", "/textures/PlasticTextureNormal.png");
             user.bodyMesh.material.opacity = 0.75;
             user.bodyMesh.material.shininess = shinynessBody;
             user.bodyMesh.material.transparent = true;
         break;
         case "wood":
-            user.bodySetTexture("./public/textures/WoodTexture.png", "./public/textures/WoodTextureNormal.png");
+            user.bodySetTexture("/textures/WoodTexture.png", "/textures/WoodTextureNormal.png");
             user.bodyMesh.material.shininess = shinynessBody;
         break;
         case "gold":
-            user.bodySetTexture("./public/textures/GoldTexture.png", "./public/textures/GoldTextureNormal.png");
+            user.bodySetTexture("/textures/GoldTexture.png", "/textures/GoldTextureNormal.png");
             user.bodyMesh.material.shininess = 1000;
             user.bodyMesh.material.specular = new THREE.Color(0xffd700);
             user.bodyMesh.material.color = new THREE.Color(0xffd700);
@@ -327,29 +343,29 @@ texturePickerHead.addEventListener("change", function() {
     const selectedTexture = this.value;
     switch (selectedTexture) {
         case "gold":
-            user.headSetTexture("./public/textures/GoldTexture.png", "./public/textures/GoldTextureNormal.png");
+            user.headSetTexture("/textures/GoldTexture.png", "/textures/GoldTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffd700);
             user.headMesh.material.color = new THREE.Color(0xffd700);
         break;
         case "fabric":
             var color = user.headMesh.material.color;
-            user.headSetTexture("./public/textures/FabricTexture.png", "./public/textures/FabricTextureNormal.png");
+            user.headSetTexture("/textures/FabricTexture.png", "/textures/FabricTextureNormal.png");
             user.headMesh.material.color = color;
             user.headMesh.material.shininess = shinynessHead
         break;
         case "metal":
-            user.headSetTexture("./public/textures/MetalTexture.png", "./public/textures/MetalTextureNormal.png");
+            user.headSetTexture("/textures/MetalTexture.png", "/textures/MetalTextureNormal.png");
             user.headMesh.material.shininess = 1000;
             user.headMesh.material.specular = new THREE.Color(0xffffff);
         break;
         case "plastic":
-            user.headSetTexture("./public/textures/PlasticTexture.png", "./public/textures/PlasticTextureNormal.png");
+            user.headSetTexture("/textures/PlasticTexture.png", "/textures/PlasticTextureNormal.png");
             user.headMesh.material.opacity = 0.75;
             user.headMesh.material.transparent = true;
         break;
         case "wood":
-            user.headSetTexture("./public/textures/WoodTexture.png", "./public/textures/WoodTextureNormal.png");
+            user.headSetTexture("/textures/WoodTexture.png", "/textures/WoodTextureNormal.png");
             user.headMesh.material.shininess = shinynessHead
         break;
         case "none":
@@ -365,52 +381,41 @@ document.addEventListener("keydown", function(e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70 || hasCrashed)) {
                 return;
             }
 
-            user.translateX(-jumpSize); 
+            user.addAnimations();
+
+            user.moveForwardAnimation.play();
             
             //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
-                objScene.camera.position.x -= jumpSize
+                objScene.updateCameraAnimations();
+                objScene.moveForwardAnimation.play();
+
+                //objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
             }
 
+            animationClock.start()
             break;
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.70 || hasCrashed)) {
                 return;
             }
 
-            user.translateX(jumpSize);
+            user.addAnimations();
+            user.moveBackwardAnimation.play();
+
+            animationClock.start();
             break;
         
         //switch scenes - note we will probably replace this key with a button later
         case "Enter": 
-            if (hasSwitched) {
-                return;
-            }
-
-            console.log("Going to next scene ");
-
-            // Hide CSS elements
-            document.getElementById("container").style.display = "none";
-            //set user
-            //user = scene.user;
-
-            //add user to new scene 
-            objScene.add(user);
-            user.translateZ(-20);
-
-            //switch scene 
-            scene = objScene;
-            
-            user.setBoundingBox();
-            
-            hasSwitched = true;
+            switchScene();
             break;
         case 'r':
             userControls.autoRotate = !userControls.autoRotate;

@@ -20,14 +20,14 @@ export default class Car extends THREE.Group {
     constructor(color) {
         super();
         //set car speed
-        this.carSpeed = THREE.MathUtils.randFloat(-15,-5);
+        this.carSpeed = THREE.MathUtils.randFloat(-25,-15);
 
         const loadManager = new THREE.LoadingManager () ;
         const loader = new THREE.TextureLoader( loadManager );
         this.isCar = true;
         //create car body
-        let texture = loader.load("public/textures/Metal055A_1K-PNG_Color.png");
-        let metalMap = loader.load("public/textures/Metal055A_1K-PNG_Metalness.png");
+        let texture = loader.load("textures/Metal055A_1K-PNG_Color.png");
+        let metalMap = loader.load("textures/Metal055A_1K-PNG_Metalness.png");
 
         let body = new THREE.BoxGeometry(12, 7, 20);
         let carMat = new THREE.MeshToonMaterial({ 
@@ -49,8 +49,8 @@ export default class Car extends THREE.Group {
             cab = new THREE.BoxGeometry(11,12,7);
         }
 
-        let cabText = loader.load("public/textures/Metal032_1K-PNG_Color.png");
-        let metalCabMap = loader.load("public/textures/Metal032_1K-PNG_Metalness.png");
+        let cabText = loader.load("textures/Metal032_1K-PNG_Color.png");
+        let metalCabMap = loader.load("textures/Metal032_1K-PNG_Metalness.png");
 
         let cabMat = new THREE.MeshToonMaterial({ 
             color: 0xFFFFFF,  map: cabText, bumpMap: metalCabMap
@@ -76,8 +76,8 @@ export default class Car extends THREE.Group {
         this.wheels = [];
 
         let wheel = new THREE.CylinderGeometry( 3, 3, 3, 32 ); 
-        let wheelTexture = loader.load("public/textures/Rubber004_1K-JPG_Color.jpg");
-        let displacementTexture = loader.load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
+        let wheelTexture = loader.load("textures/Rubber004_1K-JPG_Color.jpg");
+        let displacementTexture = loader.load("textures/Rubber004_1K-JPG_Displacement.jpg");
 
         let wheelMat = new THREE.MeshToonMaterial({
             color: 0x97a18d, map: wheelTexture, bumpMap: displacementTexture
@@ -131,8 +131,8 @@ export default class Car extends THREE.Group {
         //make bounding box before adding lights to avoid odd issues with helper meshes 
         this.boundingBox = new THREE.Box3().setFromObject(this);
 
-        const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
-        this.add(boxHelper);
+        //const boxHelper = new THREE.BoxHelper(this, 0xff0000); // Red color
+        //this.add(boxHelper);
 
 
         this.add(headLightRightMesh);
