@@ -20,7 +20,7 @@ export default class Car extends THREE.Group {
     constructor(color) {
         super();
         //set car speed
-        this.carSpeed = THREE.MathUtils.randFloat(-15,-5);
+        this.carSpeed = THREE.MathUtils.randFloat(-25,-15);
 
         const loadManager = new THREE.LoadingManager () ;
         const loader = new THREE.TextureLoader( loadManager );

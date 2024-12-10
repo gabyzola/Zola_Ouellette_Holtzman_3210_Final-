@@ -104,18 +104,18 @@ export default class User extends THREE.Group {
         //Create Axis for Quaternion angle 
         let yAxis = new THREE.Vector3(-1, 0, 0);
         //create final rotation quaternion 
-        let qFinal = new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI * 2);
+        let qFinal = new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI/2);
         
         let clip = this._createAnimationClip(
             [
                 this.position.x - this.jumpsize , this.position.y, this.position.z,
-                this.position.x - this.jumpsize/2, this.position.y + 20 , this.position.z - 10,
-                this.position.x - this.jumpsize/4, this.position.y, this.position.z - 20,
+                this.position.x - this.jumpsize/2, this.position.y + 20 , this.position.z - 20,
+                this.position.x - this.jumpsize/4, this.position.y, this.position.z - 40,
 
             ],
             [
                 0, 0, 0, 1,
-                qFinal.x, qFinal.y, qFinal.z, qFinal.w,
+                -qFinal.x, -qFinal.y, -qFinal.z, qFinal.w,
                 qFinal.x, qFinal.y, qFinal.z, qFinal.w,
             ]
         )
@@ -124,6 +124,7 @@ export default class User extends THREE.Group {
         this.deathClip = this.mixer.clipAction(clip);
 
         //only loop once 
+        this.deathClip.timeScale = 0.8;
         this.deathClip.loop = THREE.LoopOnce;
         this.deathClip.clampWhenFinished = true;
         this.deathClip.play();
