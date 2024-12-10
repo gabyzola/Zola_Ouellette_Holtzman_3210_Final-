@@ -31,6 +31,8 @@ export default class ObjectViewerScene extends THREE.Scene{
 
         this.createLanes();
 
+        this.jumpsize = 30;
+        this.updateCameraAnimations();
     }
      /**
      * Create alternating lanes of road and grass
@@ -51,5 +53,41 @@ export default class ObjectViewerScene extends THREE.Scene{
             this.add(lane);
             console.log(lane.road);
         }
+    }
+
+    updateCameraAnimations() {
+        this.mixer = new THREE.AnimationMixer(this.camera);
+        
+        let clip = this._createAnimationClip(
+            [
+                this.camera.position.x, this.camera.position.y, this.camera.position.z,
+                this.camera.position.x - this.jumpsize/2, this.camera.position.y , this.camera.position.z,
+                this.camera.position.x - this.jumpsize, this.camera.position.y, this.camera.position.z,
+            ]
+        )
+        
+        //add clip to create clip
+        this.moveForwardAnimation = this.mixer.clipAction(clip);
+
+        //only loop once 
+        this.moveForwardAnimation.loop = THREE.LoopOnce;
+        this.moveForwardAnimation.clampWhenFinished = true;
+    }
+
+    update(delta) {
+        this.mixer.update(delta);
+    }
+
+    /**
+     * Creates new animation clip 
+     * 
+     * @param {Array} positionArray Array of lenght 9 with positions for animation
+     * @param {Array} quaternionArray Array of legnth 9 with rotations as Quaternions
+     * @returns {THREE.AnimationClip} a new animation clip
+     */
+    _createAnimationClip(positionArray, quaternionArray) {
+        let position = new THREE.VectorKeyframeTrack('.position', [0, 0.35, 0.70], positionArray)
+
+        return new THREE.AnimationClip('action', 3, [position])
     }
 }
