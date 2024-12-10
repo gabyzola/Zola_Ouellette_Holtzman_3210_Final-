@@ -67,6 +67,10 @@ export default class UserScene extends THREE.Scene{
         ground.position.y = -7;
         group.add(ground);
 
+        // Create the skybox
+        
+
+
         return group;
     }
 
