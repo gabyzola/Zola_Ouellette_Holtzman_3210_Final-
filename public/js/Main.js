@@ -31,7 +31,7 @@ let scene = new UserScene(renderer);
 var user = new CustomUser();
 
 var userControls = new OrbitControls(scene.camera, renderer.domElement);
-userControls.maxPolarAngle = Math.PI * 1.25 / 2;
+userControls.maxPolarAngle = Math.PI * 1.1 / 2;
 userControls.autoRotate = false;
 userControls.autoRotateSpeed = Math.PI;
 userControls.enableZoom = false;
