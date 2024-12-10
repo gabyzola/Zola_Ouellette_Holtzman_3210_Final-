@@ -191,6 +191,8 @@ function switchScene() {
     user.addAnimations();
     
     objToUpdate.push(user);
+    objToUpdate.push(objScene);
+
     hasSwitched = true;
 
     animationClock.start()
@@ -382,11 +384,15 @@ document.addEventListener("keydown", function(e) {
 
             //user.translateX(-jumpSize); 
             user.addAnimations();
+
             user.moveForwardAnimation.play();
             
             //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
-                objScene.camera.position.x -= jumpSize
+                objScene.updateCameraAnimations();
+                objScene.moveForwardAnimation.play();
+
+                //objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
             }
 
