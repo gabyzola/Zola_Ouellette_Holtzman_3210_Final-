@@ -4,7 +4,7 @@ import Lane from './Lane.js';
 import LaneObjectPool from './LaneObjectPool.js';
 
 
-export default class ObjectViewerScene extends THREE.Scene {
+export default class Game extends THREE.Scene {
 
     /**
      * This is the scene for the user selections and being able to access the user afters
@@ -29,17 +29,8 @@ export default class ObjectViewerScene extends THREE.Scene {
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-
-        //    this.createLanes();
         this.laneObjectPool= new LaneObjectPool(12); 
-        this.activeLanes= [];
-        for(var i = 0; i < 13; i ++){
-           this.activeLanes.push(this.laneObjectPool.getObject());
-           this.activeLanes[i].position.x = i * -30 + 30; 
-           this.activeLanes[i].position.y = -3.85;
-           this.add(this.activeLanes[i]);
-        }
-
+        this.add(...this.laneObjectPool.activeLanes)
         this.jumpsize = 30;
         this.updateCameraAnimations();
     }
@@ -52,7 +43,7 @@ export default class ObjectViewerScene extends THREE.Scene {
         const numLanes = 10;
 
         for (let i = 0; i < numLanes; i++) {
-            const type = Math.round(Math.random() + 1) % 2 === 0 ? 'road' : 'grass';
+            const type = Math.random() > 0.25 ? 'road' : 'grass';
             const lane = new Lane(laneWidth, laneLength, type);
 
             // Position the lane based on its index
@@ -60,7 +51,6 @@ export default class ObjectViewerScene extends THREE.Scene {
             lane.position.y = -3.85
 
             this.add(lane);
-            console.log(lane.road);
         }
     }
 
@@ -83,8 +73,9 @@ export default class ObjectViewerScene extends THREE.Scene {
         this.moveForwardAnimation.clampWhenFinished = true;
     }
 
-    update(delta) {
+    update(delta, userPosition) {
         this.mixer.update(delta);
+        this.laneObjectPool.update(userPosition);
     }
 
     playDeathAnimation() {
@@ -104,7 +95,7 @@ export default class ObjectViewerScene extends THREE.Scene {
         )
 
         this.deathClip = this.mixer.clipAction(clip);
-        this.deathClip.timeScale = 0.8;
+        this.deathClip.timeScale = 0.3;
         this.deathClip.loop = THREE.LoopOnce;
         this.deathClip.clampWhenFinished = true;
         this.deathClip.play();
@@ -128,20 +119,4 @@ export default class ObjectViewerScene extends THREE.Scene {
 
         return new THREE.AnimationClip('action', 3, [position, quaternionKF])
     }
-
-    animate(userX) {
-        for(var i = 0; i < this.activeLanes.length; i ++){
-            if(this.activeLanes[i].position.x >= userX+60){
-                this.laneObjectPool.returnObject(this.activeLanes[i]);
-                this.activeLanes.splice(1,i);
-            }
-            if(this.activeLanes.length==11){
-                let lane = this.laneObjectPool.getObject();
-                lane.position.x = userX - 270; 
-                this.activeLanes.push(lane);
-
-            }
-        }
-    }
-
 }
