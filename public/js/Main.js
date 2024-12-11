@@ -6,8 +6,6 @@ import Oracle from './User/Oracle.js';
 import CustomUser from './User/CustomUser.js';
 import Nachos from './User/Nachos.js';
 import UserScene from './UserScene.js';
-import ObjectViewerScene from "./ObjectViewerScene.js";
-import Car from './vehicles/car.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js';
 import Game from "./GameScene.js";
 

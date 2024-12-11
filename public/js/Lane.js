@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Car from './vehicles/car';
+import Car from './vehicles/car.js';
 
 export default class Lane extends THREE.Group {
     /**

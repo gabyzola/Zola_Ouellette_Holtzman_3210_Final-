@@ -47,7 +47,6 @@ export default class UserScene extends THREE.Scene{
         pedestal.castShadow = true;
         pedestal.position.y = -6.5;
         group.add(pedestal);
-        console.log(pedestal);
 
         // Create the ground around the pedestal
         const groundGeometry = new THREE.PlaneGeometry(50, 50);
