@@ -29,9 +29,6 @@ export default class LaneObjectPoool{
     }
 
     update(delta, user) {
-        if (!user) {
-            return;
-        }
 
         for (let lane of this.activeLanes) {
             if (lane.position.x >= user.position.x + 60) {
