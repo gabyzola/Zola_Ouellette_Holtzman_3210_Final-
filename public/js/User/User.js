@@ -135,7 +135,6 @@ export default class User extends THREE.Group {
             return;
         }
 
-        this.setBoundingBox();
         this.mixer.update(delta);
     }
 

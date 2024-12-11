@@ -9,6 +9,7 @@ import UserScene from './UserScene.js';
 import ObjectViewerScene from "./ObjectViewerScene.js";
 import Car from './vehicles/car.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js';
+import Game from "./GameScene.js";
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -41,76 +42,13 @@ var customUser = user;
 
 scene.add(user);
 
-var hasCrashed = false;
-
 //create scene with objects for testing 
-let objScene = new ObjectViewerScene(renderer);
+let gameScene = new Game(renderer);
 
 //variables used in controlling movement 
 let farest = 0; //farest we have gone so far 
 let jumpSize = 30; //size of each "jump" of the player 
 
-
-// hold objects to update, all object MUST have an update function 
-let objToUpdate = [];
-
-//create cars
-//@NOTE we will need to replace this with an object pool I just wanted to check logic 
-for (let i = 0; i < 25; i++) {
-    let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()));
-    objScene.add(car);
-    car.position.x = -i * jumpSize;
-    car.position.z = THREE.MathUtils.randFloat(50, 150);
-    car.start();
-    objToUpdate.push(car);
-}
-
-//last car head light we enabled 
-let lastSpotLight = new THREE.SpotLight();
-
-function updateCar(obj, delta) {
-    if (!hasSwitched) {
-        return;
-    }
-    //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
-    //this keeps the number of lights casting shadows low 
-
-    obj.update(delta);
-
-    if (obj.position.x - user.position.x === 0) {
-
-        user.setBoundingBox();
-
-        //avoiding turning the same light on multiple times 
-        if (obj.spotLight.id != lastSpotLight.id) {
-
-            lastSpotLight.castShadow = false;
-            obj.spotLight.castShadow = true;
-
-            lastSpotLight = obj.spotLight;
-        }
-
-
-        if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 12)) {
-            console.warn("car hit player")
-            user.kill();
-            objScene.playDeathAnimation();
-            hasCrashed = true;
-
-            sleep(1800).then(() => {
-                // CHAT GPT 
-                // Show custom Game Over modal
-                document.getElementById("game-over-modal").style.display = "flex";
-                document.getElementById("retry-button").addEventListener("click", function () {
-                    // Handle game restart logic here 
-                    location.reload();  
-                });
-            });
-
-
-        }
-    }
-}
 // Add the scene to the document
 function animate() {
     stats.begin();
@@ -124,25 +62,15 @@ function animate() {
         }
 
         userControls.update();
+        renderer.render(scene, scene.camera);
+        return;
     }
 
     //update each of our objects by delta 
     let delta = clock.getDelta();
 
-    for (let obj of objToUpdate) {
-
-        if (obj.isCar) {
-            updateCar(obj, delta);
-        }
-        else {
-            obj.update(delta);
-        }
-    }
-
-    if (scene instanceof ObjectViewerScene) {
-        scene.animate(user.position.x);
-
-    }
+    user.update(delta);  
+    scene.update(delta, user);
 
     renderer.render(scene, scene.camera);
 
@@ -191,28 +119,23 @@ function switchScene() {
     if (hasSwitched) {
         return;
     }
-
     console.log("Going to next scene ");
 
     // Hide CSS elements
     document.getElementById("container").style.display = "none";
     //set user
-    //user = scene.user;
 
     //add user to new scene 
-    objScene.add(user);
+    gameScene.add(user);
     user.translateZ(-20);
     user.translateY(2);
     user.rotateY(Math.PI / 2)
 
     //switch scene 
-    scene = objScene;
+    scene = gameScene;
 
     user.setBoundingBox();
     user.addAnimations();
-
-    objToUpdate.push(user);
-    objToUpdate.push(objScene);
 
     hasSwitched = true;
 
@@ -399,7 +322,7 @@ document.addEventListener("keydown", function (e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71) || gameScene.hasCrashed) {
                 return;
             }
 
@@ -409,8 +332,8 @@ document.addEventListener("keydown", function (e) {
 
             //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
-                objScene.updateCameraAnimations();
-                objScene.moveForwardAnimation.play();
+                gameScene.updateCameraAnimations();
+                gameScene.moveForwardAnimation.play();
 
                 //objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
@@ -420,7 +343,7 @@ document.addEventListener("keydown", function (e) {
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || gameScene.hasCrashed)) {
                 return;
             }
 
@@ -439,7 +362,3 @@ document.addEventListener("keydown", function (e) {
             break;
     }
 });
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
