@@ -33,7 +33,7 @@ export default class Lane extends THREE.Group {
                     let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
                     car.start();
                     car.translateY(3.85);
-                    car.position.z = -i * 100 + THREE.MathUtils.randInt(25, 100)
+                    car.position.z = -i * 50 + THREE.MathUtils.randInt(25, 50)
                     this.cars.push(car);
                     this.add(car);
                 }
@@ -68,8 +68,8 @@ export default class Lane extends THREE.Group {
             car.update(delta);
 
 
-            if (car.position.z < -300) {
-                car.position.z = 300
+            if (car.position.z < -100) {
+                car.position.z = 100
             }
            
             if (car.position.x - user.position.x != 0) {
@@ -88,7 +88,7 @@ export default class Lane extends THREE.Group {
                 this.lastSpotLight = car.spotLight;
             }
     
-    
+            //collision detection is broken right now 
             if (false && car.isIntersecting(user.boundingBox) && !this.hasCrashed && (user.position.z <= car.position.z + 12)) {
                 console.warn("car hit player")
                 user.kill();
