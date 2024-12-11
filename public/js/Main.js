@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import Stats from "three/examples/jsm/libs/stats.module.js";
+import Stats from "https://unpkg.com/three@0.141.0/examples/jsm/libs/stats.module.js";
 
 import Oracle from './User/Oracle.js';
 import CustomUser from './User/CustomUser.js';
@@ -8,7 +8,7 @@ import Nachos from './User/Nachos.js';
 import UserScene from './UserScene';
 import ObjectViewerScene from "./ObjectViewerScene";
 import Car from './vehicles/car';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.141.0/examples/jsm/Addons.js';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
