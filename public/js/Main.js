@@ -97,12 +97,14 @@ function updateCar(obj, delta) {
             objScene.playDeathAnimation();
             hasCrashed = true;
 
-            // CHAT GPT 
-            // Show custom Game Over modal
-            document.getElementById("game-over-modal").style.display = "flex";
-            document.getElementById("retry-button").addEventListener("click", function () {
-                // Handle game restart logic here 
-                location.reload();  
+            sleep(1800).then(() => {
+                // CHAT GPT 
+                // Show custom Game Over modal
+                document.getElementById("game-over-modal").style.display = "flex";
+                document.getElementById("retry-button").addEventListener("click", function () {
+                    // Handle game restart logic here 
+                    location.reload();  
+                });
             });
 
 
@@ -437,3 +439,7 @@ document.addEventListener("keydown", function (e) {
             break;
     }
 });
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
