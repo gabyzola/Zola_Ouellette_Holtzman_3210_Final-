@@ -5,7 +5,7 @@ import Exhaust from './exhaust';
  * Car objects
  * 
  * @example
- * let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()));
+ * let car = new Car( new THREE.Color(Math.random(), Math.random(), Math.random()), THREE.MathUtils.randFloat(-25,-15););
  * scene.add(car)
  * 
  * //start particles effects
@@ -17,10 +17,10 @@ import Exhaust from './exhaust';
  * }
  */
 export default class Car extends THREE.Group {
-    constructor(color) {
+    constructor(color, velocity) {
         super();
         //set car speed
-        this.carSpeed = THREE.MathUtils.randFloat(-25,-15);
+        this.carSpeed = velocity;
 
         const loadManager = new THREE.LoadingManager () ;
         const loader = new THREE.TextureLoader( loadManager );

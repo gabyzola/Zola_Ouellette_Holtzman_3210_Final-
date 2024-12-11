@@ -27,9 +27,10 @@ export default class Lane extends THREE.Group {
                 this.cars = [];
                 this.lastSpotLight = new THREE.SpotLight();
                 this.hasCrashed = false;
+                this.carSpeed = THREE.MathUtils.randFloat(-55,-15);
 
                 for (let i = 0; i < 3; i++) {
-                    let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()));
+                    let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
                     car.start();
                     car.translateY(3.85);
                     car.position.z = -i * 100 + THREE.MathUtils.randInt(25, 100)
