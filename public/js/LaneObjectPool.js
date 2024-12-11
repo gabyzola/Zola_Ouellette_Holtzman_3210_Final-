@@ -2,14 +2,14 @@ import * as THREE from 'three';
 import Lane from './Lane.js';
 
 export default class LaneObjectPoool{
-    constructor(laneNum, scene){
+    constructor(laneNum){
         this.pool= []
         this.activeLanes= [];
         this.laneNum = laneNum;
-        this.scene = scene;
+        this.hasCrashed = false; 
 
         //first two lanes are grass
-        this.activeLanes.push(new Lane(30, 750, 'grass', this.scene));
+        this.activeLanes.push(new Lane(30, 750, 'grass'));
         this.activeLanes[0].position.x = 0;
         this.activeLanes[0].position.y = -3.85;
 
@@ -26,7 +26,7 @@ export default class LaneObjectPoool{
     } 
 
     createObject(){
-        return new Lane(30, 750, Math.random() > 0.1 ? 'road' : 'grass', this.scene)
+        return new Lane(30, 750, Math.random() > 0.1 ? 'road' : 'grass');
     }
 
     update(delta, user) {
@@ -36,6 +36,10 @@ export default class LaneObjectPoool{
                 lane.position.x = user.position.x - ((this.activeLanes.length-2) * 30);
             }
             lane.update(delta, user);
+
+            if (lane.hasCrashed) {
+                this.hasCrashed = true;
+            }
         }
 
     }

@@ -10,13 +10,12 @@ export default class Lane extends THREE.Group {
      * @param {string} type Type of the lane ('road' or 'grass').
      * @param {THREE.Scene} Scene Scene to play death animation 
      */
-    constructor(width, length, type, scene) {
+    constructor(width, length, type) {
         super();
 
         this.width = width;
         this.length = length;
         this.type = type;
-        this.scene = scene;
 
         let color; 
 
@@ -94,9 +93,7 @@ export default class Lane extends THREE.Group {
             if (car.isIntersecting(user.boundingBox) && !this.hasCrashed && (user.position.z <= car.position.z + 12)) {
                 console.warn("car hit player")
                 user.kill();
-                this.scene.playDeathAnimation();
                 this.hasCrashed = true;
-                
                 
                 this.sleep(2500).then(() => {
                     // CHAT GPT 

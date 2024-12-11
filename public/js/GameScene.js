@@ -32,6 +32,8 @@ export default class Game extends THREE.Scene {
         this.laneObjectPool= new LaneObjectPool(8, this); 
         //adds all lanes to scene by unpacking each element in array 
         this.add(...this.laneObjectPool.activeLanes)
+        
+        this.hasCrashed = false;
 
         this.jumpsize = 30;
         this.updateCameraAnimations();
@@ -45,6 +47,11 @@ export default class Game extends THREE.Scene {
     update(delta, user) {
         this.mixer.update(delta);
         this.laneObjectPool.update(delta,user);
+
+        if (this.laneObjectPool.hasCrashed) {
+            this.hasCrashed = true;
+            this.playDeathAnimation();
+        }
     }
 
     updateCameraAnimations() {
