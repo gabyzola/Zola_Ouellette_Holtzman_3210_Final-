@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import Lane from './Lane.js';
 
 export default class LaneObjectPoool{
