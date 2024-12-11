@@ -30,28 +30,21 @@ export default class Game extends THREE.Scene {
         this.add(a);
 
         this.laneObjectPool= new LaneObjectPool(12); 
+        //adds all lanes to scene by unpacking each element in array 
         this.add(...this.laneObjectPool.activeLanes)
+
         this.jumpsize = 30;
         this.updateCameraAnimations();
     }
+
     /**
-    * Create alternating lanes of road and grass
-    */
-    createLanes() {
-        const laneWidth = 30;
-        const laneLength = 300;
-        const numLanes = 10;
-
-        for (let i = 0; i < numLanes; i++) {
-            const type = Math.random() > 0.25 ? 'road' : 'grass';
-            const lane = new Lane(laneWidth, laneLength, type);
-
-            // Position the lane based on its index
-            lane.position.x = -laneWidth * i;
-            lane.position.y = -3.85
-
-            this.add(lane);
-        }
+     * Updates scene - camera animations and lanes 
+     * @param {float} delta Time since last frame
+     * @param {User} user User in the game needed for lanes to update cars correctly
+     */
+    update(delta, user) {
+        this.mixer.update(delta);
+        this.laneObjectPool.update(delta,user);
     }
 
     updateCameraAnimations() {
@@ -71,11 +64,6 @@ export default class Game extends THREE.Scene {
         //only loop once 
         this.moveForwardAnimation.loop = THREE.LoopOnce;
         this.moveForwardAnimation.clampWhenFinished = true;
-    }
-
-    update(delta, userPosition) {
-        this.mixer.update(delta);
-        this.laneObjectPool.update(userPosition);
     }
 
     playDeathAnimation() {
