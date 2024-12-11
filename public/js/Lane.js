@@ -81,6 +81,7 @@ export default class Lane extends THREE.Group {
             //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
              //this keeps the number of lights casting shadows low 
             //avoiding turning the same light on multiple times 
+            
             if (car.spotLight.id != this.lastSpotLight.id) {
     
                 this.lastSpotLight.castShadow = false;
@@ -90,7 +91,11 @@ export default class Lane extends THREE.Group {
             }
     
             //collision detection is broken right now 
-            if (car.isIntersecting(user.boundingBox) && !this.hasCrashed && (user.position.z <= car.position.z + 12)) {
+            if (car.isIntersecting(user.boundingBox) && user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 12) {
+                if (this.hasCrashed) {
+                    continue;
+                }
+
                 console.warn("car hit player")
                 user.kill();
                 this.hasCrashed = true;
