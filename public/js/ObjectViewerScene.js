@@ -134,13 +134,11 @@ export default class ObjectViewerScene extends THREE.Scene {
             if(this.activeLanes[i].position.x >= userX+60){
                 this.laneObjectPool.returnObject(this.activeLanes[i]);
                 this.activeLanes.splice(1,i);
-                console.log("working", this.activeLanes.length);
             }
             if(this.activeLanes.length==11){
                 let lane = this.laneObjectPool.getObject();
                 lane.position.x = userX - 270; 
                 this.activeLanes.push(lane);
-                console.log("working", this.activeLanes.length);
 
             }
         }
