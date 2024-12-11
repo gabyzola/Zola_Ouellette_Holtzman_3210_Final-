@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import Car from './vehicles/car';
 
 export default class Lane extends THREE.Group {
     /**
@@ -7,6 +8,7 @@ export default class Lane extends THREE.Group {
      * @param {number} width Width of the lane.
      * @param {number} length Length of the lane.
      * @param {string} type Type of the lane ('road' or 'grass').
+     * @param {THREE.Scene} Scene Scene to play death animation 
      */
     constructor(width, length, type) {
         super();
@@ -14,12 +16,34 @@ export default class Lane extends THREE.Group {
         this.width = width;
         this.length = length;
         this.type = type;
-        this.road =false; 
 
-        // Define the material based on type
-        const color = type === 'road' ? 0x808071 : 0x228B22; 
-        if (color==0x808071 ){
-            this.road= true; 
+        let color; 
+
+        switch (type) {
+            case 'road':
+                this.isRoad = true;
+                color = 0x808071
+
+                //create cars 
+                this.cars = [];
+                this.lastSpotLight = new THREE.SpotLight();
+                this.hasCrashed = false;
+                this.carSpeed = THREE.MathUtils.randFloat(-55,-15);
+
+                //add cars to this group 
+                for (let i = 0; i < 4; i++) {
+                    let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
+                    car.start();
+                    car.translateY(3.85);
+                    car.position.z = -i * 150 + THREE.MathUtils.randInt(100, 150)
+                    this.cars.push(car);
+                    this.add(car);
+                }
+                break;
+            case 'grass':
+                this.isGrass = true;
+                color = 0x228B22;
+                break;
         }
         
         const material = new THREE.MeshPhongMaterial({ color });
@@ -33,5 +57,58 @@ export default class Lane extends THREE.Group {
 
         // Add the lane to the group
         this.add(laneMesh);
+    }
+
+    update(delta, user) {
+        if ( this.type == 'grass') {
+            //nothing to update return
+            return;
+        }
+
+
+        for (let car of this.cars) {
+            car.update(delta);
+
+            if (car.position.z < -300) {
+                car.position.z = 300
+            }
+
+            if (car.position.x - user.position.x == 0) {
+               continue;
+            }
+
+            //user.setBoundingBox();
+            //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
+             //this keeps the number of lights casting shadows low 
+            //avoiding turning the same light on multiple times 
+            if (car.spotLight.id != this.lastSpotLight.id) {
+    
+                this.lastSpotLight.castShadow = false;
+                car.spotLight.castShadow = true;
+    
+                this.lastSpotLight = car.spotLight;
+            }
+    
+            //collision detection is broken right now 
+            if (car.isIntersecting(user.boundingBox) && !this.hasCrashed && (user.position.z <= car.position.z + 12)) {
+                console.warn("car hit player")
+                user.kill();
+                this.hasCrashed = true;
+                
+                this.sleep(2500).then(() => {
+                    // CHAT GPT 
+                    // Show custom Game Over modal
+                    document.getElementById("game-over-modal").style.display = "flex";
+                    document.getElementById("retry-button").addEventListener("click", function () {
+                        // Handle game restart logic here 
+                        location.reload();  
+                    });
+                });
+            }
+        }
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
