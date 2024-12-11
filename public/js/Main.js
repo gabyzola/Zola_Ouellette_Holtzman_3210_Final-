@@ -6,7 +6,7 @@ import Oracle from './User/Oracle.js';
 import CustomUser from './User/CustomUser.js';
 import Nachos from './User/Nachos.js';
 import UserScene from './UserScene';
-import ObjectViewerScene from "./ObjectViewerScene";
+import Game from "./Game.js";
 import Car from './vehicles/car';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
@@ -44,7 +44,7 @@ scene.add(user);
 var hasCrashed = false;
 
 //create scene with objects for testing 
-let objScene = new ObjectViewerScene(renderer);
+let gameScene = new Game(renderer);
 
 //variables used in controlling movement 
 let farest = 0; //farest we have gone so far 
@@ -58,7 +58,7 @@ let objToUpdate = [];
 //@NOTE we will need to replace this with an object pool I just wanted to check logic 
 for (let i = 0; i < 25; i++) {
     let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()));
-    objScene.add(car);
+    gameScene.add(car);
     car.position.x = -i * jumpSize;
     car.position.z = THREE.MathUtils.randFloat(50, 150);
     car.start();
@@ -94,10 +94,10 @@ function updateCar(obj, delta) {
         if (obj.isIntersecting(user.boundingBox) && !hasCrashed && (user.position.z <= obj.position.z + 12)) {
             console.warn("car hit player")
             user.kill();
-            objScene.playDeathAnimation();
+            gameScene.playDeathAnimation();
             hasCrashed = true;
 
-            sleep(1800).then(() => {
+            sleep(2500).then(() => {
                 // CHAT GPT 
                 // Show custom Game Over modal
                 document.getElementById("game-over-modal").style.display = "flex";
@@ -106,7 +106,6 @@ function updateCar(obj, delta) {
                     location.reload();  
                 });
             });
-
 
         }
     }
@@ -124,6 +123,8 @@ function animate() {
         }
 
         userControls.update();
+        renderer.render(scene, scene.camera);
+        return;
     }
 
     //update each of our objects by delta 
@@ -139,10 +140,7 @@ function animate() {
         }
     }
 
-    if (scene instanceof ObjectViewerScene) {
-        scene.animate(user.position.x);
-
-    }
+    scene.update(delta, user.position.x);
 
     renderer.render(scene, scene.camera);
 
@@ -200,19 +198,19 @@ function switchScene() {
     //user = scene.user;
 
     //add user to new scene 
-    objScene.add(user);
+    gameScene.add(user);
     user.translateZ(-20);
     user.translateY(2);
     user.rotateY(Math.PI / 2)
 
     //switch scene 
-    scene = objScene;
+    scene = gameScene;
 
     user.setBoundingBox();
     user.addAnimations();
 
     objToUpdate.push(user);
-    objToUpdate.push(objScene);
+    //objToUpdate.push(gameScene);
 
     hasSwitched = true;
 
@@ -399,7 +397,7 @@ document.addEventListener("keydown", function (e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.75 || hasCrashed)) {
                 return;
             }
 
@@ -409,8 +407,8 @@ document.addEventListener("keydown", function (e) {
 
             //only move camera forward when player is at a new farest x
             if (user.position.x - jumpSize < farest) {
-                objScene.updateCameraAnimations();
-                objScene.moveForwardAnimation.play();
+                gameScene.updateCameraAnimations();
+                gameScene.moveForwardAnimation.play();
 
                 //objScene.camera.position.x -= jumpSize
                 farest = user.position.x - jumpSize;
@@ -420,7 +418,7 @@ document.addEventListener("keydown", function (e) {
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.75 || hasCrashed)) {
                 return;
             }
 
