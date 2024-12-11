@@ -7,16 +7,17 @@ export default class LaneObjectPoool{
         this.activeLanes= [];
         this.laneNum = laneNum;
 
-        for (let i=0; i<laneNum; i++){
-            this.pool.push(this.createObject());
-        }
-
+        //first two lanes are grass
         this.activeLanes.push(new Lane(30, 300, 'grass'));
-        this.activeLanes[0].position.x = 30;
+        this.activeLanes[0].position.x = 0;
         this.activeLanes[0].position.y = -3.85;
 
-        for(var i = 1; i < laneNum; i ++){
-            this.activeLanes.push(this.getObject());
+        this.activeLanes.push(new Lane(30, 300, 'grass'));
+        this.activeLanes[1].position.x = 30;
+        this.activeLanes[1].position.y = -3.85;
+
+        for(var i = 2; i < laneNum; i ++){
+            this.activeLanes.push(this.createObject());
             this.activeLanes[i].position.x = i * -30 + 30; 
             this.activeLanes[i].position.y = -3.85;
         }
@@ -25,6 +26,14 @@ export default class LaneObjectPoool{
 
     createObject(){
         return new Lane(30, 300, Math.random() > 0.25 ? 'road' : 'grass')
+    }
+
+    update(userX) {
+        for (let lane of this.activeLanes) {
+            if (lane.position.x >= userX + 60) {
+                lane.position.x = userX - 270;
+            }
+        }
     }
 
     returnObject(object){
@@ -38,14 +47,6 @@ export default class LaneObjectPoool{
         }
 
         return this.pool.pop();
-    }
-
-    update(userX) {
-        for (let lane of this.activeLanes) {
-            if (lane.position.x >= userX + 60) {
-                lane.position.x = userX- 270;
-            }
-        }
     }
 
 }
