@@ -29,7 +29,7 @@ export default class Game extends THREE.Scene {
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-        this.laneObjectPool= new LaneObjectPool(5); 
+        this.laneObjectPool= new LaneObjectPool(8, this); 
         //adds all lanes to scene by unpacking each element in array 
         this.add(...this.laneObjectPool.activeLanes)
 

@@ -8,13 +8,15 @@ export default class Lane extends THREE.Group {
      * @param {number} width Width of the lane.
      * @param {number} length Length of the lane.
      * @param {string} type Type of the lane ('road' or 'grass').
+     * @param {THREE.Scene} Scene Scene to play death animation 
      */
-    constructor(width, length, type) {
+    constructor(width, length, type, scene) {
         super();
 
         this.width = width;
         this.length = length;
         this.type = type;
+        this.scene = scene;
 
         let color; 
 
@@ -30,11 +32,11 @@ export default class Lane extends THREE.Group {
                 this.carSpeed = THREE.MathUtils.randFloat(-55,-15);
 
                 //add cars to this group 
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 4; i++) {
                     let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
                     car.start();
                     car.translateY(3.85);
-                    car.position.z = -i * 40 + THREE.MathUtils.randInt(25, 50)
+                    car.position.z = -i * 150 + THREE.MathUtils.randInt(100, 150)
                     this.cars.push(car);
                     this.add(car);
                 }
@@ -68,8 +70,8 @@ export default class Lane extends THREE.Group {
         for (let car of this.cars) {
             car.update(delta);
 
-            if (car.position.z < -150) {
-                car.position.z = 150
+            if (car.position.z < -300) {
+                car.position.z = 300
             }
 
             if (car.position.x - user.position.x == 0) {
@@ -89,10 +91,10 @@ export default class Lane extends THREE.Group {
             }
     
             //collision detection is broken right now 
-            if (false && car.isIntersecting(user.boundingBox) && !this.hasCrashed && (user.position.z <= car.position.z + 12)) {
+            if (car.isIntersecting(user.boundingBox) && !this.hasCrashed && (user.position.z <= car.position.z + 12)) {
                 console.warn("car hit player")
                 user.kill();
-                //gameScene.playDeathAnimation();
+                this.scene.playDeathAnimation();
                 this.hasCrashed = true;
                 
                 
