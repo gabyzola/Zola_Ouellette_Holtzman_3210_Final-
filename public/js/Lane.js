@@ -18,7 +18,7 @@ export default class Lane extends THREE.Group {
 
         // Define the material based on type
         const color = type === 'road' ? 0x808071 : 0x228B22; 
-        if (color==0x808071 ){
+        if (color == 'road'){
             this.road= true; 
         }
         
