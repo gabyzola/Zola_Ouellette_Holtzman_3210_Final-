@@ -8,11 +8,11 @@ export default class LaneObjectPoool{
         this.laneNum = laneNum;
 
         //first two lanes are grass
-        this.activeLanes.push(this.createObject());
+        this.activeLanes.push(new Lane(30, 750, 'grass'));
         this.activeLanes[0].position.x = 0;
         this.activeLanes[0].position.y = -3.85;
 
-        this.activeLanes.push(new Lane(30, 750, 'grass'));
+        this.activeLanes.push(this.createObject());
         this.activeLanes[1].position.x = 30;
         this.activeLanes[1].position.y = -3.85;
 
