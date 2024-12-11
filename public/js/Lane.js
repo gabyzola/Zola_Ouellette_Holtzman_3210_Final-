@@ -29,11 +29,12 @@ export default class Lane extends THREE.Group {
                 this.hasCrashed = false;
                 this.carSpeed = THREE.MathUtils.randFloat(-55,-15);
 
-                for (let i = 0; i < 3; i++) {
+                //add cars to this group 
+                for (let i = 0; i < 5; i++) {
                     let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
                     car.start();
                     car.translateY(3.85);
-                    car.position.z = -i * 50 + THREE.MathUtils.randInt(25, 50)
+                    car.position.z = -i * 40 + THREE.MathUtils.randInt(25, 50)
                     this.cars.push(car);
                     this.add(car);
                 }
@@ -67,13 +68,12 @@ export default class Lane extends THREE.Group {
         for (let car of this.cars) {
             car.update(delta);
 
-
-            if (car.position.z < -100) {
-                car.position.z = 100
+            if (car.position.z < -150) {
+                car.position.z = 150
             }
-           
-            if (car.position.x - user.position.x != 0) {
-               return;
+
+            if (car.position.x - user.position.x == 0) {
+               continue;
             }
 
             //user.setBoundingBox();
