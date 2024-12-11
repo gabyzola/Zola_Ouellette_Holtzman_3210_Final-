@@ -40,7 +40,7 @@ export default class UserScene extends THREE.Scene{
 
         // Create the pedestal
         const pedestalGeometry = new THREE.CylinderGeometry(4, 4, 1, 32);
-        const pedestalMaterial = new THREE.MeshPhongMaterial({ map: loader.load('/textures/MarbleTexture.png') });
+        const pedestalMaterial = new THREE.MeshPhongMaterial({ map: loader.load('public/textures/MarbleTexture.png') });
         const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
         pedestal.material.shininess = 1000;
         pedestal.receiveShadow = true;
@@ -51,7 +51,7 @@ export default class UserScene extends THREE.Scene{
 
         // Create the ground around the pedestal
         const groundGeometry = new THREE.PlaneGeometry(50, 50);
-        const groundMaterial = new THREE.MeshPhongMaterial({ map: loader.load('/textures/WoodTexture.png') });
+        const groundMaterial = new THREE.MeshPhongMaterial({ map: loader.load('public/textures/WoodTexture.png') });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.receiveShadow = true;
         ground.rotation.x = -Math.PI / 2;
@@ -79,7 +79,7 @@ export default class UserScene extends THREE.Scene{
         ceilingLightMesh.rotateX(Math.PI);
         group.add(ceilingLightMesh);
 
-        const ceilingLight = new THREE.SpotLight(0xffffff, 1000);
+        const ceilingLight = new THREE.SpotLight(0xffffff, 0.5);
         ceilingLight.position.set(0,30 - 7,0);
         ceilingLight.target.position.set(0,0,0);
         ceilingLight.angle = Math.PI/2;
@@ -189,7 +189,7 @@ export default class UserScene extends THREE.Scene{
      */
     addLight(x,y,z) {
         // Add the directional light to the scene
-        const light = new THREE.DirectionalLight(0xffffff, 0.5);
+        const light = new THREE.DirectionalLight(0xffffff, 0.25);
         light.position.set(x, y, z);
         light.target.position.set(0, 0, 0);
         light.castShadow = true;

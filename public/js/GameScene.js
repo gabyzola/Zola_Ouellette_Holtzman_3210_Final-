@@ -25,7 +25,7 @@ export default class Game extends THREE.Scene {
         this.camera.rotateY(Math.PI / 2);
         this.camera.rotateX(-Math.PI / 8)
 
-        var a = new THREE.AmbientLight(0x707070, 10);
+        var a = new THREE.AmbientLight(0x707070, 1);
         this.add(a);
 
         this.laneObjectPool= new LaneObjectPool(8, this); 
