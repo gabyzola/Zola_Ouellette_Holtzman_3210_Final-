@@ -83,8 +83,8 @@ export default class Game extends THREE.Scene {
             ],
             [
                 this.camera.quaternion.x, this.camera.quaternion.y, this.camera.quaternion.z, this.camera.quaternion.w,
-                this.camera.quaternion.x, this.camera.quaternion.y / 2, this.camera.quaternion.z / 4, this.camera.quaternion.w,
-                this.camera.quaternion.x, this.camera.quaternion.y / 4, this.camera.quaternion.z / 8, this.camera.quaternion.w,
+                this.camera.quaternion.x, -this.camera.quaternion.y / 8, -this.camera.quaternion.z / 4, this.camera.quaternion.w,
+                this.camera.quaternion.x, -this.camera.quaternion.y / 4, -this.camera.quaternion.z / 8, this.camera.quaternion.w,
             ]
         )
 

@@ -320,7 +320,7 @@ document.addEventListener("keydown", function (e) {
         //move forwards 
         case "w":
         case "ArrowUp":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.75) || gameScene.hasCrashed) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71) || gameScene.hasCrashed) {
                 return;
             }
 
@@ -341,7 +341,7 @@ document.addEventListener("keydown", function (e) {
         //move backwards
         case "s":
         case "ArrowDown":
-            if (!hasSwitched || (animationClock.getElapsedTime() < 0.75 || gameScene.hasCrashed)) {
+            if (!hasSwitched || (animationClock.getElapsedTime() < 0.71 || gameScene.hasCrashed)) {
                 return;
             }
 
