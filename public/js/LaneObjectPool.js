@@ -8,11 +8,11 @@ export default class LaneObjectPoool{
         this.laneNum = laneNum;
 
         //first two lanes are grass
-        this.activeLanes.push(new Lane(30, 300, 'grass'));
+        this.activeLanes.push(this.createObject());
         this.activeLanes[0].position.x = 0;
         this.activeLanes[0].position.y = -3.85;
 
-        this.activeLanes.push(new Lane(30, 300, 'grass'));
+        this.activeLanes.push(new Lane(30, 750, 'grass'));
         this.activeLanes[1].position.x = 30;
         this.activeLanes[1].position.y = -3.85;
 
@@ -25,15 +25,21 @@ export default class LaneObjectPoool{
     } 
 
     createObject(){
-        return new Lane(30, 300, Math.random() > 0.25 ? 'road' : 'grass')
+        return new Lane(30, 750, Math.random() > 0.1 ? 'road' : 'grass')
     }
 
-    update(userX) {
-        for (let lane of this.activeLanes) {
-            if (lane.position.x >= userX + 60) {
-                lane.position.x = userX - 270;
-            }
+    update(delta, user) {
+        if (!user) {
+            return;
         }
+
+        for (let lane of this.activeLanes) {
+            if (lane.position.x >= user.position.x + 60) {
+                lane.position.x = user.position.x - ((this.activeLanes.length-2) * 30);
+            }
+            lane.update(delta, user);
+        }
+
     }
 
     returnObject(object){
