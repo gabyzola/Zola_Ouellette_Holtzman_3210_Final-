@@ -78,19 +78,6 @@ export default class Lane extends THREE.Group {
         if (car.position.z < -300) {
             car.position.z = 300
         }
-
-        //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
-            //this keeps the number of lights casting shadows low 
-        //avoiding turning the same light on multiple times 
-        
-        if (false && car.spotLight.id != this.lastSpotLight.id && car.position.z >= user.position.z - 5) {
-
-            this.lastSpotLight.castShadow = false;
-            car.spotLight.castShadow = true;
-
-            this.lastSpotLight = car.spotLight;
-        }
-        
         
         //collision detection is broken right now 
         if (car.boundingBox.containsPoint(user.position) && user.position.x != 0&& user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 11 ) {
