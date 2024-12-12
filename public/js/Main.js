@@ -374,3 +374,25 @@ document.addEventListener("keydown", function (e) {
             break;
     }
 });
+
+//add touch to go forwward for mobile users 
+document.addEventListener("touchstart", handleTouch, false);
+function handleTouch(e) {
+    if (!hasSwitched || (animationClock.getElapsedTime() < 0.71) || gameScene.hasCrashed) {
+        return;
+    }
+
+    user.addAnimations();
+
+    user.moveForwardAnimation.play();
+
+    //only move camera forward when player is at a new farest x
+    if (user.position.x - jumpSize < farest) {
+        gameScene.updateCameraAnimations();
+        gameScene.moveForwardAnimation.play();
+
+        //objScene.camera.position.x -= jumpSize
+        farest = user.position.x - jumpSize;
+    }
+    animationClock.start()
+}

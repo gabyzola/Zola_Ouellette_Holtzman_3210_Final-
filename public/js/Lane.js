@@ -8,7 +8,6 @@ export default class Lane extends THREE.Group {
      * @param {number} width Width of the lane.
      * @param {number} length Length of the lane.
      * @param {string} type Type of the lane ('road' or 'grass').
-     * @param {THREE.Scene} Scene Scene to play death animation 
      */
     constructor(width, length, type) {
         super();

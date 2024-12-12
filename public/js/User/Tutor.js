@@ -41,7 +41,7 @@ export default class Tutor extends User {
         const loader = new THREE.TextureLoader();
         const geometry = new THREE.CylinderGeometry(2.5, 3, 8, 32);
         const material = [
-            new THREE.MeshPhongMaterial({ map: loader.load('/textures/bugs-in-the-code.jpg') }),
+            new THREE.MeshPhongMaterial({ map: loader.load('public/textures/bugs-in-the-code.jpg') }),
             new THREE.MeshPhongMaterial({ color: 0xcbbfb7 }),
             new THREE.MeshPhongMaterial({ color: 0xcbbfb7 }),
         ];

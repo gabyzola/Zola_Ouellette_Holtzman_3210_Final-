@@ -131,8 +131,8 @@ export default class Car extends THREE.Group {
         //make bounding box before adding lights to avoid odd issues with helper meshes 
         this.boundingBox = new THREE.Box3().setFromCenterAndSize(this.position, new THREE.Vector3(18, 7 , 12));
 
-        const boxHelper = new THREE.Box3Helper(this.boundingBox, 0xff0000); // Red color
-        this.add(boxHelper);
+        //const boxHelper = new THREE.Box3Helper(this.boundingBox, 0xff0000); // Red color
+        //this.add(boxHelper);
 
 
         this.add(headLightRightMesh);
