@@ -67,55 +67,45 @@ export default class Lane extends THREE.Group {
 
 
         for (let car of this.cars) {
-            user.setBoundingBox();
-            car.update(delta);
-
-            if (car.position.z < -300) {
-                car.position.z = 300
-            }
-
-            if (car.position.x - user.position.x == 0) {
-               continue;
-            }
-
-            //user.setBoundingBox();
-            //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
-             //this keeps the number of lights casting shadows low 
-            //avoiding turning the same light on multiple times 
-            
-            if (car.spotLight.id != this.lastSpotLight.id && car.position.z >= user.position.z - 5) {
-    
-                this.lastSpotLight.castShadow = false;
-                car.spotLight.castShadow = true;
-    
-                this.lastSpotLight = car.spotLight;
-            }
-            
-           
-            //collision detection is broken right now 
-            if (car.isIntersecting(user.boundingBox) && user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 11) {
-                if (this.hasCrashed) {
-                    continue;
-                }
-                
-                console.warn("car hit player")
-                user.kill();
-                this.hasCrashed = true;
-                
-                this.sleep(2500).then(() => {
-                    // CHAT GPT 
-                    // Show custom Game Over modal
-                    document.getElementById("game-over-modal").style.display = "flex";
-                    document.getElementById("retry-button").addEventListener("click", function () {
-                        // Handle game restart logic here 
-                        location.reload();  
-                    });
-                });
-            }
+            this.updateCar(car, delta, user);
         }
     }
 
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    updateCar(car, delta, user) {
+        user.setBoundingBox();
+        car.update(delta);
+
+        if (car.position.z < -300) {
+            car.position.z = 300
+        }
+
+        if (car.position.x - user.position.x == 0) {
+            return;
+        }
+
+        //user.setBoundingBox();
+        //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
+            //this keeps the number of lights casting shadows low 
+        //avoiding turning the same light on multiple times 
+        
+        if (false && car.spotLight.id != this.lastSpotLight.id && car.position.z >= user.position.z - 5) {
+
+            this.lastSpotLight.castShadow = false;
+            car.spotLight.castShadow = true;
+
+            this.lastSpotLight = car.spotLight;
+        }
+        
+        
+        //collision detection is broken right now 
+        if (car.isIntersecting(user.boundingBox) && user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 11) {
+            if (this.hasCrashed) {
+                return;
+            }
+            
+            console.warn("car hit player")
+            user.kill();
+            this.hasCrashed = true;
+        }
     }
 }

@@ -93,6 +93,20 @@ export default class Game extends THREE.Scene {
         this.deathClip.loop = THREE.LoopOnce;
         this.deathClip.clampWhenFinished = true;
         this.deathClip.play();
+
+        this.sleep(2500).then(() => {
+            // CHAT GPT 
+            // Show custom Game Over modal
+            document.getElementById("game-over-modal").style.display = "flex";
+            document.getElementById("retry-button").addEventListener("click", function () {
+                // Handle game restart logic here 
+                location.reload();  
+            });
+        });
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**
