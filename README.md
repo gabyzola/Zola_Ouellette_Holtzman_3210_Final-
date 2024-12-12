@@ -13,4 +13,5 @@ This project is like crossy road where your goal is to cross a given area withou
 - [Gaby Zola](https://github.com/gabyzola):
 
 ## Texture sources 
-- [Metal053C](ambientCG.com/a/Metal053C) from ambientCG
+- Material textures from [ambientCG](https://ambientcg.com/)
+- Night sky texture from [freePik](https://www.freepik.com/search?format=search&last_filter=query&last_value=night+sky&query=night+sky)
