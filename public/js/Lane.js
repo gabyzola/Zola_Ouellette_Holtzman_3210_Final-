@@ -30,12 +30,12 @@ export default class Lane extends THREE.Group {
                 material = new THREE.MeshPhongMaterial({color: 0x808071, map: roadText, normalMap: roadGLText });
                 //create cars 
                 this.cars = [];
-                this.lastSpotLight = new THREE.SpotLight();
+                this.isCastingShadows = false;
                 this.hasCrashed = false;
                 this.carSpeed = THREE.MathUtils.randFloat(-55,-15);
 
                 //add cars to this group 
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 3; i++) {
                     let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
                     car.start();
                     car.translateY(3.85);
@@ -74,6 +74,22 @@ export default class Lane extends THREE.Group {
             return;
         }
 
+        if (this.position.distanceTo(user.position) <= 30) {
+            if (!this.isCastingShadows ) {
+                for (let car of this.cars) {
+                    console.log("turning on spotlight");
+                    car.spotLight.castShadow = true;
+                }
+                this.isCastingShadows = true;
+            }
+        }
+        else if (this.isCastingShadows) {
+            for (let car of this.cars) {
+                console.log("turning off spotlight");
+                car.spotLight.castShadow = false
+                this.isCastingShadows = false;
+            }
+        }
 
         for (let car of this.cars) {
             this.updateCar(car, delta, user);
@@ -87,7 +103,7 @@ export default class Lane extends THREE.Group {
         if (car.position.z < -300) {
             car.position.z = 300
         }
-        
+
         //collision detection is broken right now 
         if (car.boundingBox.containsPoint(user.position) && user.position.x != 0 && user.position.z <= car.position.z + 5 && user.position.z >= car.position.z - 11 ) {
             if (this.hasCrashed) {
