@@ -62,6 +62,7 @@ function animate() {
 
         userControls.update();
         renderer.render(scene, scene.camera);
+        stats.end();
         return;
     }
 
