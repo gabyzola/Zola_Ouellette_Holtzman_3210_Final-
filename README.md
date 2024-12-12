@@ -33,3 +33,9 @@ Find below info for grading
 ## Texture sources 
 - Material textures from [ambientCG](https://ambientcg.com/)
 - Night sky texture from [freePik](https://www.freepik.com/search?format=search&last_filter=query&last_value=night+sky&query=night+sky)
+
+## Acknowledgments
+A special thanks to Gus: Seth's PM, Code Reviewer, and Math Tutor.
+
+<img src="https://github.com/user-attachments/assets/493603f0-2547-4846-8518-7c62ac0eed29" alt="gus" height="250" width="150">
+
