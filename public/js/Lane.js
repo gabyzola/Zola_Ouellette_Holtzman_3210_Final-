@@ -35,13 +35,15 @@ export default class Lane extends THREE.Group {
                 this.carSpeed = THREE.MathUtils.randFloat(-55,-15);
 
                 //add cars to this group 
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < 4; i++) {
                     let car = new Car(new THREE.Color(Math.random(), Math.random(), Math.random()), this.carSpeed);
                     car.start();
                     car.translateY(3.85);
                     car.position.z = -i * 150 + THREE.MathUtils.randInt(100, 150)
                     this.cars.push(car);
                     this.add(car);
+                    car.spotLight.castShadow = true;
+                    this.isCastingShadows = true;
                 }
                 break;
             case 'grass':

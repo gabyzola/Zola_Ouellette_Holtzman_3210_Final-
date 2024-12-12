@@ -53,12 +53,12 @@ export default class Exhaust extends THREE.Group {
 class particle {
     constructor(group) {
         this.geom = new THREE.SphereGeometry( 1, 32, 16 ); 
-        this.mat = new THREE.MeshPhongMaterial( { 
+        this.mat = new THREE.MeshBasicMaterial( { 
             transparent: true,
             opacity: 1, // Adjust to make it look like smoke
             depthWrite: false, // Prevent depth issues
             side: THREE.DoubleSide, // Make the smoke visible from both sides
-            color: 0xaaaaaa, // Light gray color for smoke
+            color: 0x4c5451, // Light gray color for smoke
         } ); 
 
         this.mesh = new THREE.Mesh( this.geom, this.mat ); 
