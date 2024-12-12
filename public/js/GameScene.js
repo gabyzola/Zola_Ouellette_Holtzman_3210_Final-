@@ -14,7 +14,6 @@ export default class Game extends THREE.Scene {
         const loadManager = new THREE.LoadingManager () ;
         const loader = new THREE.CubeTextureLoader( loadManager );
         let textPath = "public/textures/nightsky.jpg"
-        //loader.setPath( 'public/textures/cube/pisa/' );
 
         this.background = loader.load( [
             textPath, textPath,
