@@ -30,7 +30,7 @@ export default class Car extends THREE.Group {
         let metalMap = loader.load("public/textures/Metal055A_1K-PNG_Metalness.png");
 
         let body = new THREE.BoxGeometry(12, 7, 20);
-        let carMat = new THREE.MeshToonMaterial({ 
+        let carMat = new THREE.MeshPhongMaterial({ 
             color: color, map: texture, bumpMap: metalMap
         });
         this.bodyMesh = new THREE.Mesh(body, carMat);
@@ -52,7 +52,7 @@ export default class Car extends THREE.Group {
         let cabText = loader.load("public/textures/Metal032_1K-PNG_Color.png");
         let metalCabMap = loader.load("public/textures/Metal032_1K-PNG_Metalness.png");
 
-        let cabMat = new THREE.MeshToonMaterial({ 
+        let cabMat = new THREE.MeshPhongMaterial({ 
             color: 0xFFFFFF,  map: cabText, bumpMap: metalCabMap
         });
         
@@ -79,7 +79,7 @@ export default class Car extends THREE.Group {
         let wheelTexture = loader.load("public/textures/Rubber004_1K-JPG_Color.jpg");
         let displacementTexture = loader.load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
 
-        let wheelMat = new THREE.MeshToonMaterial({
+        let wheelMat = new THREE.MeshPhongMaterial({
             color: 0xd1d1d1, map: wheelTexture, bumpMap: displacementTexture
         })
 
