@@ -93,7 +93,6 @@ export default class Game extends THREE.Scene {
         this.deathClip.loop = THREE.LoopOnce;
         this.deathClip.clampWhenFinished = true;
         this.deathClip.play();
-
     }
 
     /**
