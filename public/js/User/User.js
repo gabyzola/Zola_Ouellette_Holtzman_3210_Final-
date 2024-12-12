@@ -42,13 +42,6 @@ export default class User extends THREE.Group {
         this.add(this.bodyMesh);
     }
 
-    /**
-     * Sets the bounding box of the user
-     */
-    setBoundingBox() {
-        this.boundingBox = new THREE.Box3().setFromObject(this);
-    }
-
     addAnimations() {
         this.mixer = new THREE.AnimationMixer(this);
         //Create Axis for Quaternion angle 
