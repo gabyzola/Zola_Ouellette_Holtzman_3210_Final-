@@ -17,13 +17,19 @@ export default class Lane extends THREE.Group {
         this.length = length;
         this.type = type;
 
+        const loadManager = new THREE.LoadingManager () ;
+        const loader = new THREE.TextureLoader( loadManager );
+        
+        let material;
         let color; 
 
         switch (type) {
             case 'road':
                 this.isRoad = true;
-                color = 0x808071
+                let roadText = loader.load("/textures/Road007_1K-PNG_Color.png")
+                let roadGLText = loader.load("/textures/Road007_1K-PNG_NormalGL.png")
 
+                material = new THREE.MeshPhongMaterial({color: 0x808071, map: roadText, normalMap: roadGLText });
                 //create cars 
                 this.cars = [];
                 this.lastSpotLight = new THREE.SpotLight();
@@ -41,12 +47,17 @@ export default class Lane extends THREE.Group {
                 }
                 break;
             case 'grass':
+
                 this.isGrass = true;
-                color = 0x228B22;
+                let grassText = loader.load("/textures/Ground037_1K-PNG_Color.png")
+                grassText.wrapS = THREE.MirroredRepeatWrapping
+                grassText.wrapT = THREE.MirroredRepeatWrapping
+                let grassGLText = loader.load("/textures/Ground037_1K-PNG_NormalGL.png")
+                material = new THREE.MeshPhongMaterial({color: 0x228B22, map: grassText});
                 break;
         }
         
-        const material = new THREE.MeshPhongMaterial({ color });
+        
 
         // Create a box geometry for the lane
         const geometry = new THREE.BoxGeometry(width, 0.1, length);

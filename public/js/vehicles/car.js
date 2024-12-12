@@ -80,7 +80,7 @@ export default class Car extends THREE.Group {
         let displacementTexture = loader.load("public/textures/Rubber004_1K-JPG_Displacement.jpg");
 
         let wheelMat = new THREE.MeshToonMaterial({
-            color: 0x97a18d, map: wheelTexture, bumpMap: displacementTexture
+            color: 0xd1d1d1, map: wheelTexture, bumpMap: displacementTexture
         })
 
         let wheelMesh = new THREE.Mesh(wheel, wheelMat);
