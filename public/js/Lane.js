@@ -21,7 +21,6 @@ export default class Lane extends THREE.Group {
         const loader = new THREE.TextureLoader( loadManager );
         
         let material;
-        let color; 
 
         switch (type) {
             case 'road':
@@ -53,7 +52,7 @@ export default class Lane extends THREE.Group {
                 grassText.wrapS = THREE.MirroredRepeatWrapping
                 grassText.wrapT = THREE.MirroredRepeatWrapping
                 let grassGLText = loader.load("/textures/Ground037_1K-PNG_NormalGL.png")
-                material = new THREE.MeshPhongMaterial({color: 0x228B22, map: grassText});
+                material = new THREE.MeshPhongMaterial({color: 0x228B22, map: grassText, normalMap: grassGLText});
                 break;
         }
         
@@ -91,7 +90,7 @@ export default class Lane extends THREE.Group {
         }
         
         //collision detection is broken right now 
-        if (car.boundingBox.containsPoint(user.position) && user.position.x != 0&& user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 11 ) {
+        if (car.boundingBox.containsPoint(user.position) && user.position.x != 0 && user.position.z <= car.position.z + 5 && user.position.z >= car.position.z - 11 ) {
             if (this.hasCrashed) {
                 return;
             }
