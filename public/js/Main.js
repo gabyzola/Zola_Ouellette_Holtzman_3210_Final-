@@ -9,6 +9,7 @@ import UserScene from './UserScene.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js';
 import Game from "./GameScene.js";
 import Nachos from "./User/Nachos.js";
+import Gus from './User/Gus.js';
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -168,6 +169,12 @@ presetSelector.addEventListener("change", function () {
             document.getElementById("noPresets").style.display = "none";
             scene.remove(user);
             user = new Nachos();
+            scene.add(user);
+            break;
+        case "gus":
+            document.getElementById("noPresets").style.display = "none";
+            scene.remove(user);
+            user = new Gus();
             scene.add(user);
             break;
     }
