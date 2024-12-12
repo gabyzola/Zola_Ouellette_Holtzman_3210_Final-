@@ -55,7 +55,7 @@ class particle {
         this.geom = new THREE.SphereGeometry( 1, 32, 16 ); 
         this.mat = new THREE.MeshBasicMaterial( { 
             transparent: true,
-            opacity: 1, // Adjust to make it look like smoke
+            //opacity: 1, // Adjust to make it look like smoke
             depthWrite: false, // Prevent depth issues
             side: THREE.DoubleSide, // Make the smoke visible from both sides
             color: 0x4c5451, // Light gray color for smoke
@@ -75,6 +75,6 @@ class particle {
         this.mesh.translateY(this.velocity.y * h)
         this.mesh.translateZ(this.velocity.z * h);
 
-        this.mat.opacity -= 0.2 * h;
+        //this.mat.opacity -= 0.2 * h;
     }
 }
