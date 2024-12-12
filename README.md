@@ -23,6 +23,8 @@ Find below info for grading
 [Slides](https://www.canva.com/design/DAGY7769RUM/3pBMtL_UKi6ouRsWDHhSlg/view?utm_content=DAGY7769RUM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hc057a9cd51)
 
 [User Manual](https://docs.google.com/document/d/1y78iVtO_G3zAP_NdX8b2mW25oJXXpE92AlO3_AbuDW8/edit?usp=sharing)
+
+[Demo Video Youtube Link](https://www.youtube.com/watch?v=nqCvpF9z318) [Download link ](https://drive.google.com/file/d/1OVlxgc_K6jvFsOwTMNoR_sUIy1dSHbIB/view?usp=sharing)
 ## Collaborators and Contacts:
 - [Sean Ouellette](https://github.com/SOuellette22): [ouellettese04@gmail.com](ouellettese04@gmail.com)
 - [Seth Holtzman](https://github.com/SethMC26): [holtzmans@merrimack.edu](holtzmans@merrimack.edu)
