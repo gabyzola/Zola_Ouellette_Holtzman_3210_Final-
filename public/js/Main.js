@@ -4,10 +4,11 @@ import Stats from "https://unpkg.com/three@0.141.0/examples/jsm/libs/stats.modul
 
 import Oracle from './User/Oracle.js';
 import CustomUser from './User/CustomUser.js';
-import Nachos from './User/Nachos.js';
+import Tutor from './User/Tutor.js';
 import UserScene from './UserScene.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js';
 import Game from "./GameScene.js";
+
 
 const renderer = new THREE.WebGLRenderer({ canvas: myCanvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -158,10 +159,10 @@ presetSelector.addEventListener("change", function () {
             user = customUser;
             scene.add(user);
             break;
-        case "nachos":
+        case "tutor":
             document.getElementById("noPresets").style.display = "none";
             scene.remove(user);
-            user = new Nachos();
+            user = new Tutor();
             scene.add(user);
             break;
     }
