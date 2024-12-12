@@ -31,7 +31,6 @@ export default class LaneObjectPoool{
     update(delta, user) {
 
         for (let lane of this.activeLanes) {
-            user.setBoundingBox();
             if (lane.position.x >= user.position.x + 90) {
                 lane.position.x = user.position.x - ((this.activeLanes.length-3) * 30);
             }

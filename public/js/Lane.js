@@ -72,18 +72,13 @@ export default class Lane extends THREE.Group {
     }
 
     updateCar(car, delta, user) {
-        user.setBoundingBox();
+        
         car.update(delta);
 
         if (car.position.z < -300) {
             car.position.z = 300
         }
 
-        if (car.position.x - user.position.x == 0) {
-            return;
-        }
-
-        //user.setBoundingBox();
         //if car is in the same "lane" as user turn on headlight's shadows and turn off headlight of last car 
             //this keeps the number of lights casting shadows low 
         //avoiding turning the same light on multiple times 
@@ -98,7 +93,7 @@ export default class Lane extends THREE.Group {
         
         
         //collision detection is broken right now 
-        if (car.isIntersecting(user.boundingBox) && user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 11) {
+        if (car.boundingBox.containsPoint(user.position) && user.position.x != 0&& user.position.z <= car.position.z + 12 && user.position.z >= car.position.z - 11 ) {
             if (this.hasCrashed) {
                 return;
             }

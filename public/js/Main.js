@@ -133,7 +133,6 @@ function switchScene() {
     //switch scene 
     scene = gameScene;
 
-    user.setBoundingBox();
     user.addAnimations();
 
     hasSwitched = true;
