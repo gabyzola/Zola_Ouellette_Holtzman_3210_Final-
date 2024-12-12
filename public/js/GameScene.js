@@ -14,7 +14,7 @@ export default class Game extends THREE.Scene {
         super();
 
         // Create a camera
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 300);
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 
         this.camera.position.z = -20; //move camera right 
 
@@ -28,7 +28,7 @@ export default class Game extends THREE.Scene {
         var a = new THREE.AmbientLight(0x707070, 10);
         this.add(a);
 
-        this.laneObjectPool= new LaneObjectPool(8, this); 
+        this.laneObjectPool= new LaneObjectPool(10, this); 
         //adds all lanes to scene by unpacking each element in array 
         this.add(...this.laneObjectPool.activeLanes)
         
