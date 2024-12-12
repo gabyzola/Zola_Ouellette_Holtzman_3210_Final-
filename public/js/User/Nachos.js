@@ -18,7 +18,7 @@ export default class Nachos extends User {
         const geometry = new THREE.CylinderGeometry(1.6, 1.6, 3.2, 32);
         const material = [
             new THREE.MeshPhongMaterial({ color: 0xffe2c6 }),
-            new THREE.MeshPhongMaterial({ map: loader.load('public/textures/Nachos3.jpg') }),
+            new THREE.MeshPhongMaterial({ map: loader.load('public/textures/Nachos.jpg') }),
             new THREE.MeshPhongMaterial({ color: 0xffe2c6 })
         ];
         const mesh = new THREE.Mesh(geometry, material);
