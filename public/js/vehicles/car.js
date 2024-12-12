@@ -138,7 +138,7 @@ export default class Car extends THREE.Group {
         this.add(headLightRightMesh);
         this.translateY(2);
 
-        this.spotLight = new THREE.SpotLight( 0xffa530, 1, 150, Math.PI/5);
+        this.spotLight = new THREE.SpotLight( 0xffa530, 1000, 150, Math.PI/5);
         this.spotLight.position.set(0, headLightLeftMesh.position.y - 2, headLightLeftMesh.position.z - 0.75);
 
         //create target, note may need to change this 

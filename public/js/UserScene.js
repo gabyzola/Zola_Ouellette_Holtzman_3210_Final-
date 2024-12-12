@@ -78,7 +78,7 @@ export default class UserScene extends THREE.Scene{
         ceilingLightMesh.rotateX(Math.PI);
         group.add(ceilingLightMesh);
 
-        const ceilingLight = new THREE.SpotLight(0xffffff, 0.5);
+        const ceilingLight = new THREE.SpotLight(0xffffff, 1000);
         ceilingLight.position.set(0,30 - 7,0);
         ceilingLight.target.position.set(0,0,0);
         ceilingLight.angle = Math.PI/2;
@@ -188,7 +188,7 @@ export default class UserScene extends THREE.Scene{
      */
     addLight(x,y,z) {
         // Add the directional light to the scene
-        const light = new THREE.DirectionalLight(0xffffff, 0.25);
+        const light = new THREE.DirectionalLight(0xffffff, 0.5);
         light.position.set(x, y, z);
         light.target.position.set(0, 0, 0);
         light.castShadow = true;
